@@ -91,7 +91,7 @@ const GpaCalculator: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
         <div className="flex items-center gap-3 mb-6">
           <span className="text-2xl">📚</span>
-          <h3 className="text-xl font-semibold text-text">Add New Course</h3>
+          <h3 className="text-xl font-semibold text-text font-display">Add New Course</h3>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -168,7 +168,7 @@ const GpaCalculator: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
           <div className="flex items-center gap-3 mb-6">
             <span className="text-2xl">📊</span>
-            <h3 className="text-xl font-semibold text-text">Your Courses</h3>
+            <h3 className="text-xl font-semibold text-text font-display">Your Courses</h3>
           </div>
           
           <div className="space-y-4">
@@ -261,7 +261,7 @@ const GpaCalculator: React.FC = () => {
       {modules.length === 0 && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
           <div className="text-6xl mb-6">📚</div>
-          <h3 className="text-xl font-semibold text-text mb-3">Ready to calculate your GPA?</h3>
+          <h3 className="text-xl font-semibold text-text mb-3 font-display">Ready to calculate your GPA?</h3>
           <p className="text-text-secondary mb-6 max-w-md mx-auto">
             Add your first course above to start tracking your academic progress and see your GPA in real-time!
           </p>

@@ -13,7 +13,7 @@ function App() {
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
               {/* Logo/brand */}
-              <h1 className="text-2xl font-semibold text-text flex items-center gap-2">
+              <h1 className="text-2xl font-semibold text-text flex items-center gap-2 font-display">
                 <span className="text-primary">🎓</span>
                 GPA Calculator
               </h1>
@@ -33,10 +33,10 @@ function App() {
               </button>
               <button
                 onClick={() => setActiveTab('planner')}
-                className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 min-w-[140px] ${
+                className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 min-w-[140px] border-2 ${
                   activeTab === 'planner'
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'text-text-secondary hover:text-text hover:bg-gray-100'
+                    ? 'bg-primary text-white shadow-sm border-primary'
+                    : 'text-text-secondary hover:text-text hover:bg-gray-100 border-primary'
                 }`}
               >
                 GPA Planner
@@ -51,7 +51,7 @@ function App() {
         {activeTab === 'calculator' && (
           <div>
             <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-text mb-3">Calculate your GPA</h2>
+              <h2 className="text-3xl font-bold text-text mb-3 font-display">Calculate your GPA</h2>
               <p className="text-lg text-text-secondary max-w-2xl mx-auto">
                 Track your academic progress and calculate your GPA with our intuitive grade calculator
               </p>

@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        'display': ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         primary: '#F88A22',      // main orange for buttons and navbar
         accent: '#FFD580',       // soft yellow for highlights
