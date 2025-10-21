@@ -249,30 +249,27 @@ const GpaCalculator: React.FC = () => {
           </div>
           
           <div className="flex flex-col items-center">
-            {/* Circular Progress */}
-            <div className="relative w-40 h-40 mb-6">
-              <svg className="w-40 h-40 transform -rotate-90" viewBox="0 0 100 100">
-                {/* Background Circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
+            {/* Speedometer-style Progress */}
+            <div className="relative w-48 h-32 mb-6">
+              <svg className="w-48 h-32" viewBox="0 0 200 100">
+                {/* Background Arc */}
+                <path
+                  d="M 20 80 A 80 80 0 0 1 180 80"
                   stroke="#E5E7EB"
-                  strokeWidth="8"
+                  strokeWidth="12"
                   fill="none"
+                  strokeLinecap="round"
                 />
-                {/* Progress Circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
+                {/* Progress Arc */}
+                <path
+                  d="M 20 80 A 80 80 0 0 1 180 80"
                   stroke={
                     calculateGPA() >= 3.7 ? '#22C55E' :
                     calculateGPA() >= 3.0 ? '#F88A22' :
-                    calculateGPA() >= 2.0 ? '#F59E0B' :
-                    '#EF4444'
+                    calculateGPA() >= 2.0 ? '#F88A22' :
+                    '#F88A22'
                   }
-                  strokeWidth="8"
+                  strokeWidth="12"
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray={`${(calculateGPA() / 4.0) * 251.2} 251.2`}
@@ -280,23 +277,23 @@ const GpaCalculator: React.FC = () => {
                 />
               </svg>
               {/* Center Content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
                 <div className={`text-4xl font-bold font-display ${
                   calculateGPA() >= 3.7 ? 'text-green-600' :
                   calculateGPA() >= 3.0 ? 'text-primary' :
-                  calculateGPA() >= 2.0 ? 'text-orange-600' :
-                  'text-red-600'
+                  calculateGPA() >= 2.0 ? 'text-primary' :
+                  'text-primary'
                 }`}>
                   {modules.length > 0 ? calculateGPA().toFixed(2) : '0.00'}
                 </div>
-                <div className="text-sm font-semibold text-slate-600">Cumulative GPA</div>
+                <div className="text-sm font-semibold text-text-secondary">Cumulative GPA</div>
               </div>
             </div>
             
             {/* GPA Range */}
-            <div className="flex justify-between w-full max-w-40 mb-6">
-              <span className="text-sm text-slate-500">0.0</span>
-              <span className="text-sm text-slate-500">4.0</span>
+            <div className="flex justify-between w-full max-w-48 mb-6 px-4">
+              <span className="text-sm text-text-secondary">0.0</span>
+              <span className="text-sm text-text-secondary">4.0</span>
             </div>
 
             {/* Summary Stats */}
