@@ -88,18 +88,18 @@ const GpaCalculator: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Add Course Form */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 animate-slide-up">
-        <div className="flex items-center gap-3 mb-8">
+      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 sm:p-8 animate-slide-up">
+        <div className="flex items-center gap-3 mb-6 sm:mb-8">
           <div className="p-2 bg-primary/10 rounded-lg">
-            <span className="text-2xl">📚</span>
+            <span className="text-xl sm:text-2xl">📚</span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 font-display">Add New Module</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-display">Add New Module</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Module Name Input */}
-          <div className="md:col-span-2">
-            <label className="block text-sm font-semibold text-slate-700 mb-3">
+          <div className="sm:col-span-2 lg:col-span-2">
+            <label className="block text-sm font-semibold text-slate-700 mb-2 sm:mb-3">
               Module Name
             </label>
             <input
@@ -107,13 +107,13 @@ const GpaCalculator: React.FC = () => {
               value={currentModule.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="e.g., Mathematics 101"
-              className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm sm:text-base"
             />
           </div>
 
           {/* Credits Input */}
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-3">
+            <label className="block text-sm font-semibold text-slate-700 mb-2 sm:mb-3">
               Credits
             </label>
             <input
@@ -123,19 +123,19 @@ const GpaCalculator: React.FC = () => {
               placeholder="3"
               min="1"
               max="10"
-              className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm sm:text-base"
             />
           </div>
 
           {/* Grade Select */}
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-3">
+            <label className="block text-sm font-semibold text-slate-700 mb-2 sm:mb-3">
               Grade
             </label>
             <select
               value={currentModule.grade}
               onChange={(e) => handleInputChange('grade', e.target.value)}
-              className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm sm:text-base"
             >
               <option value="">Select Grade</option>
               <option value="A+">A+ (4.0)</option>
@@ -155,10 +155,10 @@ const GpaCalculator: React.FC = () => {
         </div>
 
         {/* Add Module Button */}
-        <div className="mt-6">
+        <div className="mt-4 sm:mt-6">
           <button
             onClick={addModule}
-            className="bg-primary text-white px-8 py-4 rounded-xl hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
+            className="bg-primary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
           >
             <span>➕</span>
             Add Module
@@ -167,18 +167,18 @@ const GpaCalculator: React.FC = () => {
       </div>
 
       {/* Two Column Layout for Empty State and GPA Progress */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Empty State */}
         {modules.length === 0 && (
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-16 text-center animate-scale-in">
-            <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl">📚</span>
+          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 sm:p-16 text-center animate-scale-in">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <span className="text-3xl sm:text-4xl">📚</span>
             </div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-4 font-display">Ready to calculate your GPA?</h3>
-            <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4 font-display">Ready to calculate your GPA?</h3>
+            <p className="text-base sm:text-lg text-slate-600 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed px-4">
               Add your first module above to start tracking your academic progress and see your GPA in real-time!
             </p>
-            <div className="inline-flex items-center gap-2 text-primary font-semibold bg-primary/10 px-6 py-3 rounded-xl border border-primary/20">
+            <div className="inline-flex items-center gap-2 text-primary font-semibold bg-primary/10 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl border border-primary/20 text-sm sm:text-base">
               <span>⬆️</span>
               <span>Start by adding a module above</span>
             </div>
@@ -187,12 +187,12 @@ const GpaCalculator: React.FC = () => {
 
         {/* Modules Summary */}
         {modules.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
-            <div className="flex items-center gap-3 mb-8">
+          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 sm:p-8">
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
               <div className="p-2 bg-primary/10 rounded-lg">
-                <span className="text-2xl">📊</span>
+                <span className="text-xl sm:text-2xl">📊</span>
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 font-display">Your Modules</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-display">Your Modules</h3>
             </div>
             
             <div className="space-y-4">
@@ -207,10 +207,10 @@ const GpaCalculator: React.FC = () => {
                 };
                 
                 return (
-                  <div key={module.id} className={`flex items-center justify-between p-5 rounded-xl border-l-4 ${getGradeColor(module.grade)} hover:shadow-lg transition-all duration-300 transform hover:scale-[1.01]`}>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-1">
-                        <h4 className="font-semibold text-slate-800">{module.name}</h4>
+                  <div key={module.id} className={`flex items-center justify-between p-3 sm:p-5 rounded-lg sm:rounded-xl border-l-4 ${getGradeColor(module.grade)} hover:shadow-lg transition-all duration-300 transform hover:scale-[1.01]`}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-1">
+                        <h4 className="font-semibold text-slate-800 text-sm sm:text-base truncate">{module.name}</h4>
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                           gradePoint >= 3.7 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg' :
                           gradePoint >= 3.0 ? 'bg-gradient-to-r from-primary to-orange-600 text-white shadow-lg' :
@@ -220,7 +220,7 @@ const GpaCalculator: React.FC = () => {
                           {module.grade}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 text-sm text-slate-600">
+                      <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-slate-600">
                         <span>{module.credits} credits</span>
                         <span>•</span>
                         <span>{gradePoint.toFixed(1)} GPA points</span>
@@ -228,7 +228,7 @@ const GpaCalculator: React.FC = () => {
                     </div>
                     <button
                       onClick={() => removeModule(module.id)}
-                      className="text-slate-500 hover:text-red-600 hover:bg-red-50 p-3 rounded-xl transition-all duration-300"
+                      className="text-slate-500 hover:text-red-600 hover:bg-red-50 p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all duration-300 flex-shrink-0"
                     >
                       🗑️
                     </button>
@@ -240,18 +240,18 @@ const GpaCalculator: React.FC = () => {
         )}
 
         {/* GPA Circular Progress */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 animate-scale-in">
-          <div className="flex items-center gap-3 mb-8">
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 sm:p-8 animate-scale-in">
+          <div className="flex items-center gap-3 mb-6 sm:mb-8">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <span className="text-2xl">🎯</span>
+              <span className="text-xl sm:text-2xl">🎯</span>
             </div>
-            <h3 className="text-2xl font-bold text-slate-800 font-display">GPA Overview</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-display">GPA Overview</h3>
           </div>
           
           <div className="flex flex-col items-center">
             {/* Speedometer-style Progress */}
-            <div className="relative w-48 h-32 mb-6">
-              <svg className="w-48 h-32" viewBox="0 0 200 100">
+            <div className="relative w-36 h-24 sm:w-48 sm:h-32 mb-4 sm:mb-6">
+              <svg className="w-36 h-24 sm:w-48 sm:h-32" viewBox="0 0 200 100">
                 {/* Background Arc */}
                 <path
                   d="M 20 80 A 80 80 0 0 1 180 80"
@@ -277,8 +277,8 @@ const GpaCalculator: React.FC = () => {
                 />
               </svg>
               {/* Center Content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
-                <div className={`text-4xl font-bold font-display ${
+              <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 sm:pt-8">
+                <div className={`text-2xl sm:text-4xl font-bold font-display ${
                   calculateGPA() >= 3.7 ? 'text-green-600' :
                   calculateGPA() >= 3.0 ? 'text-primary' :
                   calculateGPA() >= 2.0 ? 'text-primary' :
@@ -286,34 +286,34 @@ const GpaCalculator: React.FC = () => {
                 }`}>
                   {modules.length > 0 ? calculateGPA().toFixed(2) : '0.00'}
                 </div>
-                <div className="text-sm font-semibold text-text-secondary">Cumulative GPA</div>
+                <div className="text-xs sm:text-sm font-semibold text-text-secondary">Cumulative GPA</div>
               </div>
             </div>
             
             {/* GPA Range */}
-            <div className="flex justify-between w-full max-w-48 mb-6 px-4">
-              <span className="text-sm text-text-secondary">0.0</span>
-              <span className="text-sm text-text-secondary">4.0</span>
+            <div className="flex justify-between w-full max-w-36 sm:max-w-48 mb-4 sm:mb-6 px-2 sm:px-4">
+              <span className="text-xs sm:text-sm text-text-secondary">0.0</span>
+              <span className="text-xs sm:text-sm text-text-secondary">4.0</span>
             </div>
 
             {/* Summary Stats */}
             {modules.length > 0 && (
-              <div className="grid grid-cols-3 gap-4 w-full">
-                <div className="bg-slate-50 rounded-xl p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
-                  <div className="text-xl font-bold text-slate-800">{modules.length}</div>
-                  <div className="text-sm font-medium text-slate-600">Modules</div>
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full">
+                <div className="bg-slate-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
+                  <div className="text-lg sm:text-xl font-bold text-slate-800">{modules.length}</div>
+                  <div className="text-xs sm:text-sm font-medium text-slate-600">Modules</div>
                 </div>
-                <div className="bg-slate-50 rounded-xl p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
-                  <div className="text-xl font-bold text-slate-800">
+                <div className="bg-slate-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
+                  <div className="text-lg sm:text-xl font-bold text-slate-800">
                     {modules.reduce((sum, module) => sum + module.credits, 0)}
                   </div>
-                  <div className="text-sm font-medium text-slate-600">Credits</div>
+                  <div className="text-xs sm:text-sm font-medium text-slate-600">Credits</div>
                 </div>
-                <div className="bg-slate-50 rounded-xl p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
-                  <div className="text-xl font-bold text-slate-800">
+                <div className="bg-slate-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
+                  <div className="text-lg sm:text-xl font-bold text-slate-800">
                     {modules.length > 0 ? calculateTotalGradePoints().toFixed(1) : '0.0'}
                   </div>
-                  <div className="text-sm font-medium text-slate-600">Points</div>
+                  <div className="text-xs sm:text-sm font-medium text-slate-600">Points</div>
                 </div>
               </div>
             )}
