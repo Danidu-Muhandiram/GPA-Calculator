@@ -15,7 +15,7 @@ function App() {
               {/* Logo/brand */}
               <h1 className="text-2xl font-semibold text-text flex items-center gap-2 font-display">
                 <span className="text-primary">🎓</span>
-                GPA Calculator
+                GPA Calculator & Planner
               </h1>
             </div>
             
@@ -50,9 +50,9 @@ function App() {
       <main className="max-w-6xl mx-auto py-8 px-6 pt-24">
         {activeTab === 'calculator' && (
           <div>
-            <div className="text-center mb-8 relative">
+            <div className="text-center mb-8 relative mt-8">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-orange-200/20 rounded-3xl blur-3xl -z-10"></div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-4 font-display">Calculate your GPA</h2>
+              <h2 className="text-3xl font-bold text-slate-800 mb-1 font-display">Calculate your GPA</h2>
               <p className="text-lg text-slate-600 mx-auto leading-relaxed whitespace-nowrap max-w-none">
                 Track your academic progress and calculate your GPA with our intuitive grade calculator
               </p>

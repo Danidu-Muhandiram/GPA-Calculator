@@ -93,14 +93,14 @@ const GpaCalculator: React.FC = () => {
           <div className="p-2 bg-primary/10 rounded-lg">
             <span className="text-2xl">📚</span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 font-display">Add New Course</h3>
+          <h3 className="text-2xl font-bold text-slate-800 font-display">Add New Module</h3>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Module Name Input */}
           <div className="md:col-span-2">
             <label className="block text-sm font-semibold text-slate-700 mb-3">
-              Course Name
+              Module Name
             </label>
             <input
               type="text"
@@ -161,7 +161,7 @@ const GpaCalculator: React.FC = () => {
             className="bg-primary text-white px-8 py-4 rounded-xl hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
           >
             <span>➕</span>
-            Add Course
+            Add Module
           </button>
         </div>
       </div>
@@ -176,11 +176,11 @@ const GpaCalculator: React.FC = () => {
             </div>
             <h3 className="text-2xl font-bold text-slate-800 mb-4 font-display">Ready to calculate your GPA?</h3>
             <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Add your first course above to start tracking your academic progress and see your GPA in real-time!
+              Add your first module above to start tracking your academic progress and see your GPA in real-time!
             </p>
             <div className="inline-flex items-center gap-2 text-primary font-semibold bg-primary/10 px-6 py-3 rounded-xl border border-primary/20">
               <span>⬆️</span>
-              <span>Start by adding a course above</span>
+              <span>Start by adding a module above</span>
             </div>
           </div>
         )}
@@ -192,7 +192,7 @@ const GpaCalculator: React.FC = () => {
               <div className="p-2 bg-primary/10 rounded-lg">
                 <span className="text-2xl">📊</span>
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 font-display">Your Courses</h3>
+              <h3 className="text-2xl font-bold text-slate-800 font-display">Your Modules</h3>
             </div>
             
             <div className="space-y-4">
@@ -301,7 +301,7 @@ const GpaCalculator: React.FC = () => {
               <div className="grid grid-cols-3 gap-4 w-full">
                 <div className="bg-slate-50 rounded-xl p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
                   <div className="text-xl font-bold text-slate-800">{modules.length}</div>
-                  <div className="text-sm font-medium text-slate-600">Courses</div>
+                  <div className="text-sm font-medium text-slate-600">Modules</div>
                 </div>
                 <div className="bg-slate-50 rounded-xl p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
                   <div className="text-xl font-bold text-slate-800">
