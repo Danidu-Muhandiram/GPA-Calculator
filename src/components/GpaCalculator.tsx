@@ -8,25 +8,79 @@ interface Module {
   grade: string;
 }
 
+// Interface for form sets
+interface FormSet {
+  id: string;
+  module: Module;
+  isEditing: boolean;
+}
+
 // Main GPA Calculator component
 const GpaCalculator: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
-  const [currentModule, setCurrentModule] = useState<Module>({
-    id: '',
-    name: '',
-    credits: 0,
-    grade: ''
-  });
+  const [formSets, setFormSets] = useState<FormSet[]>([
+    {
+      id: 'default',
+      module: { id: '', name: '', credits: 0, grade: '' },
+      isEditing: true
+    }
+  ]);
+
+  // Add a new form set
+  const addNewFormSet = () => {
+    const newFormSet: FormSet = {
+      id: Date.now().toString(),
+      module: { id: '', name: '', credits: 0, grade: '' },
+      isEditing: true
+    };
+    setFormSets([...formSets, newFormSet]);
+  };
+
+  // Remove a form set
+  const removeFormSet = (formSetId: string) => {
+    if (formSets.length > 1) {
+      setFormSets(formSets.filter(fs => fs.id !== formSetId));
+    }
+  };
 
   // Add a new module to the list
-  const addModule = () => {
-    if (currentModule.name && currentModule.credits > 0 && currentModule.grade) {
+  const addModule = (formSetId: string) => {
+    const formSet = formSets.find(fs => fs.id === formSetId);
+    if (formSet && formSet.module.name && formSet.module.credits > 0 && formSet.module.grade) {
       const newModule = {
-        ...currentModule,
-        id: Date.now().toString() // simple ID generation
+        ...formSet.module,
+        id: Date.now().toString()
       };
       setModules([...modules, newModule]);
-      setCurrentModule({ id: '', name: '', credits: 0, grade: '' }); // reset form
+      
+      // Update the form set to show as added
+      setFormSets(formSets.map(fs => 
+        fs.id === formSetId 
+          ? { ...fs, module: newModule, isEditing: false }
+          : fs
+      ));
+    }
+  };
+
+  // Update a form set
+  const updateFormSet = (formSetId: string, field: keyof Module, value: string | number) => {
+    setFormSets(formSets.map(fs => 
+      fs.id === formSetId 
+        ? { ...fs, module: { ...fs.module, [field]: value } }
+        : fs
+    ));
+  };
+
+  // Edit an existing module
+  const editModule = (moduleId: string) => {
+    const module = modules.find(m => m.id === moduleId);
+    if (module) {
+      const newFormSet: FormSet = {
+        id: Date.now().toString(),
+        module: { ...module },
+        isEditing: true
+      };
+      setFormSets([...formSets, newFormSet]);
     }
   };
 
@@ -35,12 +89,10 @@ const GpaCalculator: React.FC = () => {
     setModules(modules.filter(module => module.id !== id));
   };
 
-  // Handle input changes
+  // Handle input changes (legacy function - no longer needed)
   const handleInputChange = (field: keyof Module, value: string | number) => {
-    setCurrentModule(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    // This function is no longer used in the new multi-form system
+    // All input changes are handled by updateFormSet function
   };
 
   // Calculate GPA based on modules
@@ -95,74 +147,106 @@ const GpaCalculator: React.FC = () => {
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-display">Add New Module</h3>
         </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {/* Module Name Input */}
-          <div className="sm:col-span-2 lg:col-span-2">
-            <label className="block text-sm font-semibold text-slate-700 mb-2 sm:mb-3">
-              Module Name
-            </label>
-            <input
-              type="text"
-              value={currentModule.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder="e.g., Mathematics 101"
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm sm:text-base"
-            />
+
+        {/* Module Input Table */}
+        <div className="bg-white rounded-lg border border-slate-200 p-4">
+          {/* Headers */}
+          <div className="grid grid-cols-12 gap-4 mb-4">
+            <div className="col-span-6">
+              <h4 className="text-sm font-semibold text-slate-700">Module Name</h4>
+            </div>
+            <div className="col-span-2 text-center">
+              <h4 className="text-sm font-semibold text-slate-700">Credits</h4>
+            </div>
+            <div className="col-span-2 text-center">
+              <h4 className="text-sm font-semibold text-slate-700">Grade</h4>
+            </div>
+            <div className="col-span-2"></div>
           </div>
 
-          {/* Credits Input */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2 sm:mb-3">
-              Credits
-            </label>
-            <input
-              type="number"
-              value={currentModule.credits || ''}
-              onChange={(e) => handleInputChange('credits', parseInt(e.target.value) || 0)}
-              placeholder="3"
-              min="1"
-              max="10"
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm sm:text-base"
-            />
-          </div>
+          {/* Module Rows */}
+          {formSets.map((formSet, index) => (
+            <div key={formSet.id} className="grid grid-cols-12 gap-4 mb-4 items-center">
+              {/* Module Name Input */}
+              <div className="col-span-6">
+                <input
+                  type="text"
+                  value={formSet.module.name}
+                  onChange={(e) => updateFormSet(formSet.id, 'name', e.target.value)}
+                  placeholder="Module name"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm"
+                />
+              </div>
 
-          {/* Grade Select */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2 sm:mb-3">
-              Grade
-            </label>
-            <select
-              value={currentModule.grade}
-              onChange={(e) => handleInputChange('grade', e.target.value)}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm sm:text-base"
+              {/* Credits Input */}
+              <div className="col-span-2">
+                <input
+                  type="number"
+                  value={formSet.module.credits || ''}
+                  onChange={(e) => updateFormSet(formSet.id, 'credits', parseInt(e.target.value) || 0)}
+                  placeholder="3"
+                  min="1"
+                  max="10"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm text-center"
+                />
+              </div>
+
+              {/* Grade Select */}
+              <div className="col-span-2">
+                <select
+                  value={formSet.module.grade}
+                  onChange={(e) => updateFormSet(formSet.id, 'grade', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm text-center"
+                >
+                  <option value="">Select Grade</option>
+                  <option value="A+">A+</option>
+                  <option value="A">A</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B">B</option>
+                  <option value="B-">B-</option>
+                  <option value="C+">C+</option>
+                  <option value="C">C</option>
+                  <option value="C-">C-</option>
+                  <option value="D+">D+</option>
+                  <option value="D">D</option>
+                  <option value="F">F</option>
+                </select>
+              </div>
+
+              {/* Remove Button */}
+              <div className="col-span-2 flex justify-end">
+                {formSets.length > 1 && (
+                  <button
+                    onClick={() => removeFormSet(formSet.id)}
+                    className="w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-200 flex items-center justify-center"
+                  >
+                    <span className="text-sm">−</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+
+          {/* Add Module Button */}
+          <div className="mt-4">
+            <button
+              onClick={() => {
+                // Add all valid modules at once
+                formSets.forEach(formSet => {
+                  if (formSet.module.name && formSet.module.credits > 0 && formSet.module.grade) {
+                    addModule(formSet.id);
+                  }
+                });
+                // Add new empty form
+                addNewFormSet();
+              }}
+              className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 text-sm"
             >
-              <option value="">Select Grade</option>
-              <option value="A+">A+ (4.0)</option>
-              <option value="A">A (4.0)</option>
-              <option value="A-">A- (3.7)</option>
-              <option value="B+">B+ (3.3)</option>
-              <option value="B">B (3.0)</option>
-              <option value="B-">B- (2.7)</option>
-              <option value="C+">C+ (2.3)</option>
-              <option value="C">C (2.0)</option>
-              <option value="C-">C- (1.7)</option>
-              <option value="D+">D+ (1.3)</option>
-              <option value="D">D (1.0)</option>
-              <option value="F">F (0.0)</option>
-            </select>
+              <span>+</span>
+              Add Module
+            </button>
           </div>
-        </div>
-
-        {/* Add Module Button */}
-        <div className="mt-4 sm:mt-6">
-          <button
-            onClick={addModule}
-            className="bg-primary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
-          >
-            <span>➕</span>
-            Add Module
-          </button>
         </div>
       </div>
 
@@ -170,16 +254,16 @@ const GpaCalculator: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Empty State */}
         {modules.length === 0 && (
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 sm:p-16 text-center animate-scale-in">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
-              <span className="text-3xl sm:text-4xl">📚</span>
+          <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl shadow-2xl border border-slate-200/50 p-8 sm:p-16 text-center animate-scale-in backdrop-blur-sm">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-primary/20 to-orange-200/30 rounded-3xl flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-lg">
+              <span className="text-4xl sm:text-5xl">📚</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4 font-display">Ready to calculate your GPA?</h3>
-            <p className="text-base sm:text-lg text-slate-600 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed px-4">
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 sm:mb-6 font-display">Ready to calculate your GPA?</h3>
+            <p className="text-lg sm:text-xl text-slate-600 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-4">
               Add your first module above to start tracking your academic progress and see your GPA in real-time!
             </p>
-            <div className="inline-flex items-center gap-2 text-primary font-semibold bg-primary/10 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl border border-primary/20 text-sm sm:text-base">
-              <span>⬆️</span>
+            <div className="inline-flex items-center gap-3 text-primary font-bold bg-gradient-to-r from-primary/10 to-orange-100/50 px-6 sm:px-8 py-4 sm:py-5 rounded-2xl border-2 border-primary/20 text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              <span className="text-xl">⬆️</span>
               <span>Start by adding a module above</span>
             </div>
           </div>
@@ -187,12 +271,15 @@ const GpaCalculator: React.FC = () => {
 
         {/* Modules Summary */}
         {modules.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 sm:p-8">
-            <div className="flex items-center gap-3 mb-6 sm:mb-8">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <span className="text-xl sm:text-2xl">📊</span>
+          <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl shadow-2xl border border-slate-200/50 p-6 sm:p-10 backdrop-blur-sm">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-3 bg-gradient-to-br from-primary/20 to-orange-200/30 rounded-2xl shadow-lg">
+                <span className="text-2xl sm:text-3xl">📊</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-display">Your Modules</h3>
+              <div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 font-display">Your Modules</h3>
+                <p className="text-slate-600 text-sm sm:text-base mt-1">Track your academic progress</p>
+              </div>
             </div>
             
             <div className="space-y-4">
@@ -207,31 +294,41 @@ const GpaCalculator: React.FC = () => {
                 };
                 
                 return (
-                  <div key={module.id} className={`flex items-center justify-between p-3 sm:p-5 rounded-lg sm:rounded-xl border-l-4 ${getGradeColor(module.grade)} hover:shadow-lg transition-all duration-300 transform hover:scale-[1.01]`}>
+                  <div key={module.id} className={`flex items-center justify-between p-4 sm:p-6 rounded-2xl border-l-4 ${getGradeColor(module.grade)} hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] bg-white/80 backdrop-blur-sm`}>
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-1">
-                        <h4 className="font-semibold text-slate-800 text-sm sm:text-base truncate">{module.name}</h4>
-                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          gradePoint >= 3.7 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg' :
-                          gradePoint >= 3.0 ? 'bg-gradient-to-r from-primary to-orange-600 text-white shadow-lg' :
-                          gradePoint >= 2.0 ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-lg' :
-                          'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-2">
+                        <h4 className="font-bold text-slate-800 text-base sm:text-lg truncate">{module.name}</h4>
+                        <span className={`px-3 py-2 rounded-xl text-sm font-bold shadow-lg ${
+                          gradePoint >= 3.7 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white' :
+                          gradePoint >= 3.0 ? 'bg-gradient-to-r from-primary to-orange-600 text-white' :
+                          gradePoint >= 2.0 ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white' :
+                          'bg-gradient-to-r from-red-500 to-red-600 text-white'
                         }`}>
                           {module.grade}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-slate-600">
+                      <div className="flex items-center gap-3 sm:gap-4 text-sm sm:text-base text-slate-600 font-medium">
                         <span>{module.credits} credits</span>
                         <span>•</span>
                         <span>{gradePoint.toFixed(1)} GPA points</span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => removeModule(module.id)}
-                      className="text-slate-500 hover:text-red-600 hover:bg-red-50 p-2 sm:p-3 rounded-lg sm:rounded-xl transition-all duration-300 flex-shrink-0"
-                    >
-                      🗑️
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => editModule(module.id)}
+                        className="text-slate-500 hover:text-primary hover:bg-primary/10 p-3 rounded-xl transition-all duration-300 flex-shrink-0 shadow-sm hover:shadow-md"
+                        title="Edit module"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        onClick={() => removeModule(module.id)}
+                        className="text-slate-500 hover:text-red-600 hover:bg-red-50 p-3 rounded-xl transition-all duration-300 flex-shrink-0 shadow-sm hover:shadow-md"
+                        title="Remove module"
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   </div>
                 );
               })}
@@ -240,12 +337,15 @@ const GpaCalculator: React.FC = () => {
         )}
 
         {/* GPA Circular Progress */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 sm:p-8 animate-scale-in">
-          <div className="flex items-center gap-3 mb-6 sm:mb-8">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <span className="text-xl sm:text-2xl">🎯</span>
+        <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl shadow-2xl border border-slate-200/50 p-6 sm:p-10 animate-scale-in backdrop-blur-sm">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="p-3 bg-gradient-to-br from-primary/20 to-orange-200/30 rounded-2xl shadow-lg">
+              <span className="text-2xl sm:text-3xl">🎯</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-display">GPA Overview</h3>
+            <div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 font-display">GPA Overview</h3>
+              <p className="text-slate-600 text-sm sm:text-base mt-1">Track your academic performance</p>
+            </div>
           </div>
           
           <div className="flex flex-col items-center">
@@ -298,22 +398,22 @@ const GpaCalculator: React.FC = () => {
 
             {/* Summary Stats */}
             {modules.length > 0 && (
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full">
-                <div className="bg-slate-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
-                  <div className="text-lg sm:text-xl font-bold text-slate-800">{modules.length}</div>
-                  <div className="text-xs sm:text-sm font-medium text-slate-600">Modules</div>
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 w-full">
+                <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all duration-300 border border-slate-200/50 shadow-lg backdrop-blur-sm">
+                  <div className="text-xl sm:text-2xl font-bold text-slate-800">{modules.length}</div>
+                  <div className="text-sm sm:text-base font-semibold text-slate-600">Modules</div>
                 </div>
-                <div className="bg-slate-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
-                  <div className="text-lg sm:text-xl font-bold text-slate-800">
+                <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all duration-300 border border-slate-200/50 shadow-lg backdrop-blur-sm">
+                  <div className="text-xl sm:text-2xl font-bold text-slate-800">
                     {modules.reduce((sum, module) => sum + module.credits, 0)}
                   </div>
-                  <div className="text-xs sm:text-sm font-medium text-slate-600">Credits</div>
+                  <div className="text-sm sm:text-base font-semibold text-slate-600">Credits</div>
                 </div>
-                <div className="bg-slate-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:shadow-lg transition-all duration-300 border border-slate-200">
-                  <div className="text-lg sm:text-xl font-bold text-slate-800">
+                <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all duration-300 border border-slate-200/50 shadow-lg backdrop-blur-sm">
+                  <div className="text-xl sm:text-2xl font-bold text-slate-800">
                     {modules.length > 0 ? calculateTotalGradePoints().toFixed(1) : '0.0'}
                   </div>
-                  <div className="text-xs sm:text-sm font-medium text-slate-600">Points</div>
+                  <div className="text-sm sm:text-base font-semibold text-slate-600">Points</div>
                 </div>
               </div>
             )}
