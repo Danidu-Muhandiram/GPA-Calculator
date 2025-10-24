@@ -152,7 +152,7 @@ const GpaCalculator: React.FC = () => {
         <div className="bg-white rounded-lg border border-slate-200 p-4">
           {/* Headers */}
           <div className="grid grid-cols-12 gap-4 mb-4">
-            <div className="col-span-6">
+            <div className="col-span-7">
               <h4 className="text-sm font-semibold text-slate-700">Module Name</h4>
             </div>
             <div className="col-span-2 text-center">
@@ -161,14 +161,14 @@ const GpaCalculator: React.FC = () => {
             <div className="col-span-2 text-center">
               <h4 className="text-sm font-semibold text-slate-700">Grade</h4>
             </div>
-            <div className="col-span-2"></div>
+            <div className="col-span-1"></div>
           </div>
 
           {/* Module Rows */}
           {formSets.map((formSet, index) => (
-            <div key={formSet.id} className="grid grid-cols-12 gap-4 mb-4 items-center">
+            <div key={formSet.id} className="grid grid-cols-12 mb-4 items-center">
               {/* Module Name Input */}
-              <div className="col-span-6">
+              <div className="col-span-7 pr-4">
                 <input
                   type="text"
                   value={formSet.module.name}
@@ -179,7 +179,7 @@ const GpaCalculator: React.FC = () => {
               </div>
 
               {/* Credits Input */}
-              <div className="col-span-2">
+              <div className="col-span-2 px-2">
                 <input
                   type="number"
                   value={formSet.module.credits || ''}
@@ -192,7 +192,7 @@ const GpaCalculator: React.FC = () => {
               </div>
 
               {/* Grade Select */}
-              <div className="col-span-2">
+              <div className="col-span-2 px-2">
                 <select
                   value={formSet.module.grade}
                   onChange={(e) => updateFormSet(formSet.id, 'grade', e.target.value)}
@@ -215,7 +215,7 @@ const GpaCalculator: React.FC = () => {
               </div>
 
               {/* Remove Button */}
-              <div className="col-span-2 flex justify-end">
+              <div className="col-span-1 flex justify-center">
                 {formSets.length > 1 && (
                   <button
                     onClick={() => removeFormSet(formSet.id)}
