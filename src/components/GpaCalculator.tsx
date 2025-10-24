@@ -25,6 +25,7 @@ const GpaCalculator: React.FC = () => {
       isEditing: true
     }
   ]);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   // Add a new form set
   const addNewFormSet = () => {
@@ -167,38 +168,44 @@ const GpaCalculator: React.FC = () => {
           {/* Module Rows */}
           {formSets.map((formSet, index) => (
             <div key={formSet.id} className="grid grid-cols-12 mb-4 items-center">
-              {/* Module Name Input */}
+          {/* Module Name Input */}
               <div className="col-span-7 pr-4">
-                <input
-                  type="text"
-                  value={formSet.module.name}
-                  onChange={(e) => updateFormSet(formSet.id, 'name', e.target.value)}
-                  placeholder="Module name"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm"
-                />
-              </div>
+            <input
+              type="text"
+                    value={formSet.module.name}
+                    onChange={(e) => updateFormSet(formSet.id, 'name', e.target.value)}
+                    placeholder="Module name (required)"
+                    required
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm"
+            />
+          </div>
 
-              {/* Credits Input */}
+          {/* Credits Input */}
               <div className="col-span-2 px-2">
-                <input
-                  type="number"
-                  value={formSet.module.credits || ''}
-                  onChange={(e) => updateFormSet(formSet.id, 'credits', parseInt(e.target.value) || 0)}
-                  placeholder="3"
-                  min="1"
-                  max="10"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm text-center"
-                />
-              </div>
+            <input
+              type="number"
+                    value={formSet.module.credits || ''}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value) || 0;
+                      if (value >= 0) {
+                        updateFormSet(formSet.id, 'credits', value);
+                      }
+                    }}
+              placeholder="3"
+                    min="0"
+              max="10"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm text-center"
+            />
+          </div>
 
-              {/* Grade Select */}
+          {/* Grade Select */}
               <div className="col-span-2 px-2">
-                <select
+            <select
                   value={formSet.module.grade}
                   onChange={(e) => updateFormSet(formSet.id, 'grade', e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm text-center"
-                >
-                  <option value="">Select Grade</option>
+            >
+              <option value="">Select Grade</option>
                   <option value="A+">A+</option>
                   <option value="A">A</option>
                   <option value="A-">A-</option>
@@ -211,8 +218,8 @@ const GpaCalculator: React.FC = () => {
                   <option value="D+">D+</option>
                   <option value="D">D</option>
                   <option value="F">F</option>
-                </select>
-              </div>
+            </select>
+          </div>
 
               {/* Remove Button */}
               <div className="col-span-1 flex justify-center">
@@ -225,27 +232,48 @@ const GpaCalculator: React.FC = () => {
                   </button>
                 )}
               </div>
-            </div>
+        </div>
           ))}
 
-          {/* Add Module Button */}
-          <div className="mt-4">
-            <button
-              onClick={() => {
-                // Add all valid modules at once
-                formSets.forEach(formSet => {
-                  if (formSet.module.name && formSet.module.credits > 0 && formSet.module.grade) {
-                    addModule(formSet.id);
+        {/* Add Module Button */}
+        <div className="mt-4">
+            <div className="flex items-center gap-3">
+          <button
+                onClick={() => {
+                  // Check if all modules are valid before adding
+                  const invalidModules: string[] = [];
+                  formSets.forEach((formSet, index) => {
+                    if (!formSet.module.name || formSet.module.credits <= 0 || !formSet.module.grade) {
+                      invalidModules.push(`Module ${index + 1}`);
+                    }
+                  });
+
+                  if (invalidModules.length === 0) {
+                    // Add all valid modules at once
+                    formSets.forEach(formSet => {
+                      if (formSet.module.name && formSet.module.credits > 0 && formSet.module.grade) {
+                        addModule(formSet.id);
+                      }
+                    });
+                    // Add new empty form
+                    addNewFormSet();
+                    setErrorMessage(''); // Clear any previous error
+                  } else {
+                    // Show error message for invalid modules
+                    setErrorMessage(`Please fill in all required fields for: ${invalidModules.join(', ')}`);
                   }
-                });
-                // Add new empty form
-                addNewFormSet();
-              }}
-              className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 text-sm"
-            >
-              <span>+</span>
-              Add Module
-            </button>
+                }}
+                className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 text-sm"
+              >
+                <span>+</span>
+            Add Module
+          </button>
+              {errorMessage && (
+                <div className="text-red-500 text-sm font-medium bg-red-50 px-3 py-2 rounded-lg border border-red-200 animate-pulse">
+                  {errorMessage}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -265,7 +293,7 @@ const GpaCalculator: React.FC = () => {
             <div className="inline-flex items-center gap-3 text-primary font-bold bg-gradient-to-r from-primary/10 to-orange-100/50 px-6 sm:px-8 py-4 sm:py-5 rounded-2xl border-2 border-primary/20 text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
               <span className="text-xl">⬆️</span>
               <span>Start by adding a module above</span>
-            </div>
+              </div>
           </div>
         )}
 
@@ -341,8 +369,8 @@ const GpaCalculator: React.FC = () => {
           <div className="flex items-center gap-4 mb-8">
             <div className="p-3 bg-gradient-to-br from-primary/20 to-orange-200/30 rounded-2xl shadow-lg">
               <span className="text-2xl sm:text-3xl">🎯</span>
-            </div>
-            <div>
+              </div>
+              <div>
               <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 font-display">GPA Overview</h3>
               <p className="text-slate-600 text-sm sm:text-base mt-1">Track your academic performance</p>
             </div>
@@ -385,7 +413,7 @@ const GpaCalculator: React.FC = () => {
                   'text-primary'
                 }`}>
                   {modules.length > 0 ? calculateGPA().toFixed(2) : '0.00'}
-                </div>
+              </div>
                 <div className="text-xs sm:text-sm font-semibold text-text-secondary">Cumulative GPA</div>
               </div>
             </div>
@@ -414,9 +442,9 @@ const GpaCalculator: React.FC = () => {
                     {modules.length > 0 ? calculateTotalGradePoints().toFixed(1) : '0.0'}
                   </div>
                   <div className="text-sm sm:text-base font-semibold text-slate-600">Points</div>
-                </div>
-              </div>
-            )}
+          </div>
+        </div>
+      )}
           </div>
         </div>
       </div>
