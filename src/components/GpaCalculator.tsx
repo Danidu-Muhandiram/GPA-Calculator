@@ -27,7 +27,7 @@ const GpaCalculator: React.FC = () => {
   ]);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  // Add a new form set
+  // Create another module form
   const addNewFormSet = () => {
     const newFormSet: FormSet = {
       id: Date.now().toString(),
@@ -37,33 +37,59 @@ const GpaCalculator: React.FC = () => {
     setFormSets([...formSets, newFormSet]);
   };
 
-  // Remove a form set
+  // Delete a module form
   const removeFormSet = (formSetId: string) => {
     if (formSets.length > 1) {
+      const formSetToRemove = formSets.find(fs => fs.id === formSetId);
+      
+      // If this form has module data, find and remove the matching module from the list
+      if (formSetToRemove?.module.name && formSetToRemove.module.credits > 0 && formSetToRemove.module.grade) {
+        const matchingModule = modules.find(module => 
+          module.name === formSetToRemove.module.name &&
+          module.credits === formSetToRemove.module.credits &&
+          module.grade === formSetToRemove.module.grade
+        );
+        
+        if (matchingModule) {
+          setModules(prevModules => prevModules.filter(module => module.id !== matchingModule.id));
+        }
+      }
+      
       setFormSets(formSets.filter(fs => fs.id !== formSetId));
     }
   };
 
-  // Add a new module to the list
+  // Save module to the list
   const addModule = (formSetId: string) => {
     const formSet = formSets.find(fs => fs.id === formSetId);
     if (formSet && formSet.module.name && formSet.module.credits > 0 && formSet.module.grade) {
+      // Don't add duplicates
+      const existingModule = modules.find(module => 
+        module.name === formSet.module.name &&
+        module.credits === formSet.module.credits &&
+        module.grade === formSet.module.grade
+      );
+      
+      if (existingModule) {
+        return;
+      }
+      
       const newModule = {
         ...formSet.module,
         id: Date.now().toString()
       };
       setModules([...modules, newModule]);
       
-      // Update the form set to show as added
+      // Mark this form as completed
       setFormSets(formSets.map(fs => 
         fs.id === formSetId 
-          ? { ...fs, module: newModule, isEditing: false }
+          ? { ...fs, module: { ...newModule }, isEditing: false }
           : fs
       ));
     }
   };
 
-  // Update a form set
+  // Handle input changes
   const updateFormSet = (formSetId: string, field: keyof Module, value: string | number) => {
     setFormSets(formSets.map(fs => 
       fs.id === formSetId 
@@ -72,28 +98,10 @@ const GpaCalculator: React.FC = () => {
     ));
   };
 
-  // Edit an existing module
-  const editModule = (moduleId: string) => {
-    const module = modules.find(m => m.id === moduleId);
-    if (module) {
-      const newFormSet: FormSet = {
-        id: Date.now().toString(),
-        module: { ...module },
-        isEditing: true
-      };
-      setFormSets([...formSets, newFormSet]);
-    }
-  };
 
-  // Remove a module from the list
-  const removeModule = (id: string) => {
-    setModules(modules.filter(module => module.id !== id));
-  };
-
-  // Handle input changes (legacy function - no longer needed)
+  // Old function - keeping for compatibility
   const handleInputChange = (field: keyof Module, value: string | number) => {
-    // This function is no longer used in the new multi-form system
-    // All input changes are handled by updateFormSet function
+    // Not used anymore
   };
 
   // Calculate GPA based on modules
@@ -310,23 +318,28 @@ const GpaCalculator: React.FC = () => {
               </div>
             </div>
             
-            <div className="space-y-4">
-              {modules.map((module) => {
+            <div className="space-y-3">
+              {modules.map((module, index) => {
                 const gradePoint = getGradePoint(module.grade);
                 const getGradeColor = (grade: string) => {
                   const point = getGradePoint(grade);
-                  if (point >= 3.7) return 'border-l-green-500 bg-green-50/50';
-                  if (point >= 3.0) return 'border-l-primary bg-orange-50/50';
-                  if (point >= 2.0) return 'border-l-orange-400 bg-orange-100/50';
-                  return 'border-l-red-400 bg-red-50/50';
+                  if (point >= 3.7) return 'border-l-green-500 bg-gradient-to-r from-green-50/80 to-emerald-50/60';
+                  if (point >= 3.0) return 'border-l-primary bg-gradient-to-r from-orange-50/80 to-orange-100/60';
+                  if (point >= 2.0) return 'border-l-orange-400 bg-gradient-to-r from-orange-100/80 to-yellow-50/60';
+                  return 'border-l-red-400 bg-gradient-to-r from-red-50/80 to-pink-50/60';
                 };
                 
                 return (
-                  <div key={module.id} className={`flex items-center justify-between p-4 sm:p-6 rounded-2xl border-l-4 ${getGradeColor(module.grade)} hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] bg-white/80 backdrop-blur-sm`}>
+                  <div key={module.id} className={`group relative flex items-center gap-4 p-4 rounded-2xl border-l-4 ${getGradeColor(module.grade)} hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01] bg-white/90 backdrop-blur-sm border border-slate-200/50 hover:border-slate-300/50`}>
+                    {/* Module Number Badge */}
+                    <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-700 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg flex-shrink-0">
+                      {index + 1}
+                    </div>
+                    
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-2">
-                        <h4 className="font-bold text-slate-800 text-base sm:text-lg truncate">{module.name}</h4>
-                        <span className={`px-3 py-2 rounded-xl text-sm font-bold shadow-lg ${
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-bold text-slate-800 text-base truncate group-hover:text-primary transition-colors duration-200">{module.name}</h4>
+                        <span className={`px-3 py-1.5 rounded-xl text-sm font-bold shadow-md ${
                           gradePoint >= 3.7 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white' :
                           gradePoint >= 3.0 ? 'bg-gradient-to-r from-primary to-orange-600 text-white' :
                           gradePoint >= 2.0 ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white' :
@@ -335,27 +348,10 @@ const GpaCalculator: React.FC = () => {
                           {module.grade}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 sm:gap-4 text-sm sm:text-base text-slate-600 font-medium">
+                      <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+                        <span className="text-primary">⚖️</span>
                         <span>{module.credits} credits</span>
-                        <span>•</span>
-                        <span>{gradePoint.toFixed(1)} GPA points</span>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => editModule(module.id)}
-                        className="text-slate-500 hover:text-primary hover:bg-primary/10 p-3 rounded-xl transition-all duration-300 flex-shrink-0 shadow-sm hover:shadow-md"
-                        title="Edit module"
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        onClick={() => removeModule(module.id)}
-                        className="text-slate-500 hover:text-red-600 hover:bg-red-50 p-3 rounded-xl transition-all duration-300 flex-shrink-0 shadow-sm hover:shadow-md"
-                        title="Remove module"
-                      >
-                        🗑️
-                      </button>
                     </div>
                   </div>
                 );
