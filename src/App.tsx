@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GpaCalculator from './components/GpaCalculator';
+import GpaPlanner from './components/GpaPlanner';
 
 // Main app component with navbar and content sections
 function App() {
@@ -65,22 +66,7 @@ function App() {
           </div>
         )}
         
-        {activeTab === 'planner' && (
-          <div>
-            <div className="text-center mb-10">
-              <h2 className="text-4xl font-bold text-slate-800 mb-4 font-display">Plan your GPA</h2>
-              <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                Plan your future grades to reach your target GPA
-              </p>
-            </div>
-            {/* GPA Planner component will go here */}
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-16 text-center">
-              <div className="text-6xl mb-4">📈</div>
-              <h3 className="text-xl font-semibold text-text mb-2">GPA Planner Coming Soon</h3>
-              <p className="text-text-secondary">Advanced planning features are in development!</p>
-            </div>
-          </div>
-        )}
+        {activeTab === 'planner' && <GpaPlanner />}
       </main>
     </div>
   );
