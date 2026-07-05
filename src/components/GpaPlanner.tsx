@@ -161,63 +161,60 @@ const GpaPlanner: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-slate-800 mb-2 font-display">GPA Planner</h2>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+        <h2 className="text-3xl font-bold text-slate-100 mb-2 font-display">GPA Planner</h2>
+        <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
           Plan your academic journey with SLIIT's grading system. Track CA marks, predict final results, and avoid prorata or repeat risks.
         </p>
       </div>
 
       {/* Input Section */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 sm:p-6">
-        <div className="flex items-center gap-3 mb-4 sm:mb-6">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <span className="text-2xl">📊</span>
-          </div>
-          <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-display">Add Module</h3>
+      <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-4 sm:p-6">
+        <div className="mb-4 sm:mb-6 border-b border-slate-800/80 pb-4">
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-100 font-display">Add Module</h3>
         </div>
 
         <div className="space-y-3">
           {formSets.map((formSet, index) => (
-            <div key={formSet.id} className="p-3 sm:p-4 bg-gradient-to-r from-slate-50 to-orange-50/30 rounded-xl border border-slate-200 hover:border-orange-200 transition-all duration-200">
+            <div key={formSet.id} className="p-3 sm:p-4 bg-[#131C2E] rounded border border-slate-800">
               <div className="grid grid-cols-12 gap-2 sm:gap-3 items-end">
                 <div className="col-span-5">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Module Name</label>
+                  <label className="block text-sm font-bold text-slate-200 mb-2">Module Name</label>
                   <input
                     type="text"
                     value={formSet.name}
                     onChange={(e) => updateForm(formSet.id, 'name', e.target.value)}
                     placeholder="e.g., Software Engineering"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+                    className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Credits</label>
+                  <label className="block text-sm font-bold text-slate-200 mb-2">Credits</label>
                   <input
                     type="number"
                     value={formSet.credits || ''}
                     onChange={(e) => updateForm(formSet.id, 'credits', parseInt(e.target.value) || 0)}
                     min="1"
                     max="10"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-center"
+                    className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">CA Marks (%)</label>
+                  <label className="block text-sm font-bold text-slate-200 mb-2">CA Marks (%)</label>
                   <input
                     type="number"
                     value={formSet.caMarks || ''}
                     onChange={(e) => updateForm(formSet.id, 'caMarks', parseFloat(e.target.value) || 0)}
                     min="0"
                     max="100"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-center"
+                    className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    CA Weight <span className="text-xs font-normal text-slate-500">(Final: {formSet.finalWeight}%)</span>
+                  <label className="block text-sm font-bold text-slate-200 mb-2">
+                    CA Weight <span className="text-xs font-normal text-slate-400">(Final: {formSet.finalWeight}%)</span>
                   </label>
                   <input
                     type="number"
@@ -246,7 +243,7 @@ const GpaPlanner: React.FC = () => {
                     }}
                     min="0"
                     max="100"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-center"
+                    className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
                   />
                 </div>
 
@@ -254,7 +251,7 @@ const GpaPlanner: React.FC = () => {
                   {formSets.length > 1 && (
                     <button
                       onClick={() => removeForm(formSet.id)}
-                      className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-full hover:from-red-600 hover:to-red-700 transition-all flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-110"
+                      className="w-8 h-8 bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center justify-center font-bold"
                       title="Remove this module"
                     >
                       ×
@@ -268,7 +265,7 @@ const GpaPlanner: React.FC = () => {
           <div className="flex gap-3 mt-4">
             <button
               onClick={addNewForm}
-              className="bg-primary text-white px-6 py-2.5 rounded-lg hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 text-sm"
+              className="bg-primary text-black border-2 border-primary px-6 py-2.5 rounded hover:bg-primary/95 transition-colors font-bold flex items-center gap-2 text-sm"
             >
               <span>+</span>
               Add Another Module
@@ -290,32 +287,37 @@ const GpaPlanner: React.FC = () => {
             const gradePoint = getGradePoint(grade);
 
             return (
-              <div key={module.id} className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-                <h3 className="text-xl font-bold text-slate-800 mb-4">{module.name}</h3>
+              <div key={module.id} className="bg-[#0F1626] rounded border-2 border-slate-800 p-6">
+                <h3 className="text-xl font-bold text-slate-100 mb-4">{module.name}</h3>
                 
                 <div className="grid grid-cols-2 gap-4">
                   {/* CA Info */}
                   <div>
-                    <div className="bg-blue-50 rounded-lg p-4 mb-4">
-                      <div className="text-sm text-blue-700 font-semibold mb-2">CA Marks</div>
-                      <div className="text-2xl font-bold text-blue-900">{module.caMarks}%</div>
-                      <div className="text-xs text-blue-600 mt-1">Weight: {module.caWeight}%</div>
+                    <div className="bg-[#131C2E] border border-blue-900/40 rounded p-4 mb-4">
+                      <div className="text-sm text-blue-400 font-bold mb-2">CA Marks</div>
+                      <div className="text-2xl font-bold text-blue-200">{module.caMarks}%</div>
+                      <div className="text-xs text-blue-400/80 mt-1">Weight: {module.caWeight}%</div>
                     </div>
 
                     {/* Risk Indicator */}
-                    <div className={`p-3 rounded-lg mb-4 ${riskStatus.color === 'red' ? 'bg-red-50 border-2 border-red-300' : riskStatus.color === 'orange' ? 'bg-orange-50 border-2 border-orange-300' : riskStatus.color === 'green' ? 'bg-green-50 border-2 border-green-300' : 'bg-gray-50 border-2 border-gray-300'}`}>
-                      <div className={`text-sm font-bold mb-1 ${riskStatus.color === 'red' ? 'text-red-700' : riskStatus.color === 'orange' ? 'text-orange-700' : riskStatus.color === 'green' ? 'text-green-700' : 'text-gray-700'}`}>
+                    <div className={`p-3 rounded border mb-4 ${
+                      riskStatus.color === 'red' ? 'bg-red-950/20 border-red-900/50 text-red-400' :
+                      riskStatus.color === 'orange' ? 'bg-orange-950/20 border-orange-900/50 text-orange-400' :
+                      riskStatus.color === 'green' ? 'bg-green-950/20 border-green-900/50 text-green-400' :
+                      'bg-slate-900/40 border-slate-800 text-slate-400'
+                    }`}>
+                      <div className="text-sm font-bold mb-1">
                         {riskStatus.status}
                       </div>
-                      <div className={`text-xs ${riskStatus.color === 'red' ? 'text-red-600' : riskStatus.color === 'orange' ? 'text-orange-600' : riskStatus.color === 'green' ? 'text-green-600' : 'text-gray-600'}`}>
+                      <div className="text-xs opacity-90">
                         {riskStatus.message}
                       </div>
                     </div>
 
                     {/* Final Needed */}
                     {module.finalMarks === undefined && (
-                      <div className="bg-primary/10 rounded-lg p-4">
-                        <div className="text-sm text-primary font-semibold mb-2">Final Exam Needed</div>
+                      <div className="bg-primary/5 border border-primary/20 rounded p-4">
+                        <div className="text-sm text-primary font-bold mb-2">Final Exam Needed</div>
                         <div className="text-2xl font-bold text-primary">{finalNeeded.toFixed(1)}%</div>
                         <div className="text-xs text-primary/70 mt-1">To pass with C grade</div>
                       </div>
@@ -324,8 +326,8 @@ const GpaPlanner: React.FC = () => {
 
                   {/* Final Info */}
                   <div>
-                    <div className="bg-green-50 rounded-lg p-4 mb-4">
-                      <div className="text-sm text-green-700 font-semibold mb-2">Final Marks</div>
+                    <div className="bg-[#131C2E] border border-green-900/40 rounded p-4 mb-4">
+                      <div className="text-sm text-green-400 font-bold mb-2">Final Marks</div>
                       <input
                         type="number"
                         value={module.finalMarks || ''}
@@ -340,17 +342,17 @@ const GpaPlanner: React.FC = () => {
                         placeholder="Enter final marks"
                         min="0"
                         max="100"
-                        className="text-2xl font-bold text-green-900 w-full bg-transparent border-none outline-none"
+                        className="text-2xl font-bold text-green-200 w-full bg-transparent border-none outline-none"
                       />
-                      <div className="text-xs text-green-600 mt-1">Weight: {module.finalWeight}%</div>
+                      <div className="text-xs text-green-400/80 mt-1">Weight: {module.finalWeight}%</div>
                     </div>
 
                     {/* Total & Grade */}
-                    <div className="bg-purple-50 rounded-lg p-4 mb-4">
-                      <div className="text-sm text-purple-700 font-semibold mb-2">Total Grade</div>
-                      <div className="text-3xl font-bold text-purple-900 mb-1">{totalMarks.toFixed(1)}%</div>
-                      <div className="text-lg font-bold text-purple-800">{grade}</div>
-                      <div className="text-xs text-purple-600 mt-1">{gradePoint.toFixed(1)} GPA points</div>
+                    <div className="bg-[#1C132E] border border-purple-900/40 rounded p-4 mb-4">
+                      <div className="text-sm text-purple-400 font-bold mb-2">Total Grade</div>
+                      <div className="text-3xl font-bold text-purple-200 mb-1">{totalMarks.toFixed(1)}%</div>
+                      <div className="text-lg font-bold text-purple-300">{grade}</div>
+                      <div className="text-xs text-purple-400/80 mt-1">{gradePoint.toFixed(1)} GPA points</div>
                     </div>
                   </div>
                 </div>

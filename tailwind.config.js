@@ -10,11 +10,11 @@ module.exports = {
         'display': ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        primary: '#F88A22',      // main orange for buttons and navbar
-        accent: '#FFD580',       // soft yellow for highlights
-        background: '#F8F9FB',   // clean white-gray background
-        text: '#1E1E1E',         // dark charcoal for main text
-        'text-secondary': '#6B7280', // neutral gray for placeholders
+        primary: '#FF7A00',      // vibrant flat orange
+        accent: '#FFA84B',       // flat orange accent
+        background: '#090D16',   // dark background
+        text: '#F8FAFC',         // light gray/white text for dark mode
+        'text-secondary': '#94A3B8', // slate gray for secondary text
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

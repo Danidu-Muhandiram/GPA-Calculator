@@ -149,26 +149,23 @@ const GpaCalculator: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Add Course Form */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 sm:p-8 animate-slide-up">
-        <div className="flex items-center gap-3 mb-6 sm:mb-8">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <span className="text-xl sm:text-2xl">📚</span>
-          </div>
-          <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-display">Add New Module</h3>
+      <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-4 sm:p-8">
+        <div className="mb-6 sm:mb-8 border-b border-slate-800/80 pb-4">
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-100 font-display">Add New Module</h3>
         </div>
 
         {/* Module Input Table */}
-        <div className="bg-white rounded-lg border border-slate-200 p-4">
+        <div className="bg-[#131C2E] rounded border border-slate-800 p-4">
           {/* Headers */}
           <div className="grid grid-cols-12 gap-4 mb-4">
             <div className="col-span-7">
-              <h4 className="text-sm font-semibold text-slate-700">Module Name</h4>
+              <h4 className="text-sm font-bold text-slate-200">Module Name</h4>
             </div>
             <div className="col-span-2 text-center">
-              <h4 className="text-sm font-semibold text-slate-700">Credits</h4>
+              <h4 className="text-sm font-bold text-slate-200">Credits</h4>
             </div>
             <div className="col-span-2 text-center">
-              <h4 className="text-sm font-semibold text-slate-700">Grade</h4>
+              <h4 className="text-sm font-bold text-slate-200">Grade</h4>
             </div>
             <div className="col-span-1"></div>
           </div>
@@ -184,7 +181,7 @@ const GpaCalculator: React.FC = () => {
                     onChange={(e) => updateFormSet(formSet.id, 'name', e.target.value)}
                     placeholder="Module name (required)"
                     required
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm"
+                    className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
             />
           </div>
 
@@ -202,7 +199,7 @@ const GpaCalculator: React.FC = () => {
               placeholder="3"
                     min="0"
               max="10"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm text-center"
+                    className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
             />
           </div>
 
@@ -211,21 +208,21 @@ const GpaCalculator: React.FC = () => {
             <select
                   value={formSet.module.grade}
                   onChange={(e) => updateFormSet(formSet.id, 'grade', e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-white hover:border-slate-400 text-sm text-center"
+                  className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
             >
-              <option value="">Select Grade</option>
-                  <option value="A+">A+</option>
-                  <option value="A">A</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B">B</option>
-                  <option value="B-">B-</option>
-                  <option value="C+">C+</option>
-                  <option value="C">C</option>
-                  <option value="C-">C-</option>
-                  <option value="D+">D+</option>
-                  <option value="D">D</option>
-                  <option value="F">F</option>
+              <option value="" className="bg-[#0A0E1A]">Select Grade</option>
+                  <option value="A+" className="bg-[#0A0E1A]">A+</option>
+                  <option value="A" className="bg-[#0A0E1A]">A</option>
+                  <option value="A-" className="bg-[#0A0E1A]">A-</option>
+                  <option value="B+" className="bg-[#0A0E1A]">B+</option>
+                  <option value="B" className="bg-[#0A0E1A]">B</option>
+                  <option value="B-" className="bg-[#0A0E1A]">B-</option>
+                  <option value="C+" className="bg-[#0A0E1A]">C+</option>
+                  <option value="C" className="bg-[#0A0E1A]">C</option>
+                  <option value="C-" className="bg-[#0A0E1A]">C-</option>
+                  <option value="D+" className="bg-[#0A0E1A]">D+</option>
+                  <option value="D" className="bg-[#0A0E1A]">D</option>
+                  <option value="F" className="bg-[#0A0E1A]">F</option>
             </select>
           </div>
 
@@ -234,9 +231,9 @@ const GpaCalculator: React.FC = () => {
                 {formSets.length > 1 && (
                   <button
                     onClick={() => removeFormSet(formSet.id)}
-                    className="w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-200 flex items-center justify-center"
+                    className="w-8 h-8 bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center justify-center font-bold"
                   >
-                    <span className="text-sm">−</span>
+                    <span className="text-lg">−</span>
                   </button>
                 )}
               </div>
@@ -271,13 +268,13 @@ const GpaCalculator: React.FC = () => {
                     setErrorMessage(`Please fill in all required fields for: ${invalidModules.join(', ')}`);
                   }
                 }}
-                className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 text-sm"
+                className="bg-primary text-black px-6 py-2.5 rounded hover:bg-primary/95 transition-colors font-bold flex items-center gap-2 text-sm border-2 border-primary"
               >
-                <span>+</span>
+                <span className="text-base font-extrabold">+</span>
             Add Module
           </button>
               {errorMessage && (
-                <div className="text-red-500 text-sm font-medium bg-red-50 px-3 py-2 rounded-lg border border-red-200 animate-pulse">
+                <div className="text-red-400 text-sm font-bold bg-red-950/20 px-3 py-2 rounded border border-red-900/50">
                   {errorMessage}
                 </div>
               )}
@@ -290,32 +287,23 @@ const GpaCalculator: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Empty State */}
         {modules.length === 0 && (
-          <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl shadow-2xl border border-slate-200/50 p-8 sm:p-16 text-center animate-scale-in backdrop-blur-sm">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-primary/20 to-orange-200/30 rounded-3xl flex items-center justify-center mx-auto mb-6 sm:mb-8 shadow-lg">
-              <span className="text-4xl sm:text-5xl">📚</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 sm:mb-6 font-display">Ready to calculate your GPA?</h3>
-            <p className="text-lg sm:text-xl text-slate-600 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-4">
+          <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-8 sm:p-16 text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-4 sm:mb-6 font-display">Ready to calculate your GPA?</h3>
+            <p className="text-lg sm:text-xl text-slate-300 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-4">
               Add your first module above to start tracking your academic progress and see your GPA in real-time!
             </p>
-            <div className="inline-flex items-center gap-3 text-primary font-bold bg-gradient-to-r from-primary/10 to-orange-100/50 px-6 sm:px-8 py-4 sm:py-5 rounded-2xl border-2 border-primary/20 text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-              <span className="text-xl">⬆️</span>
+            <div className="inline-flex items-center gap-3 text-primary font-bold bg-primary/10 px-6 sm:px-8 py-4 sm:py-5 rounded border-2 border-primary/20 text-base sm:text-lg">
               <span>Start by adding a module above</span>
-              </div>
+            </div>
           </div>
         )}
 
         {/* Modules Summary */}
         {modules.length > 0 && (
-          <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl shadow-2xl border border-slate-200/50 p-6 sm:p-10 backdrop-blur-sm">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="p-3 bg-gradient-to-br from-primary/20 to-orange-200/30 rounded-2xl shadow-lg">
-                <span className="text-2xl sm:text-3xl">📊</span>
-              </div>
-              <div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 font-display">Your Modules</h3>
-                <p className="text-slate-600 text-sm sm:text-base mt-1">Track your academic progress</p>
-              </div>
+          <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-6 sm:p-10">
+            <div className="mb-8 border-b border-slate-800/80 pb-4">
+              <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 font-display">Your Modules</h3>
+              <p className="text-slate-300 text-sm sm:text-base mt-1">Track your academic progress</p>
             </div>
             
             <div className="space-y-3">
@@ -323,34 +311,33 @@ const GpaCalculator: React.FC = () => {
                 const gradePoint = getGradePoint(module.grade);
                 const getGradeColor = (grade: string) => {
                   const point = getGradePoint(grade);
-                  if (point >= 3.7) return 'border-l-green-500 bg-gradient-to-r from-green-50/80 to-emerald-50/60';
-                  if (point >= 3.0) return 'border-l-primary bg-gradient-to-r from-orange-50/80 to-orange-100/60';
-                  if (point >= 2.0) return 'border-l-orange-400 bg-gradient-to-r from-orange-100/80 to-yellow-50/60';
-                  return 'border-l-red-400 bg-gradient-to-r from-red-50/80 to-pink-50/60';
+                  if (point >= 3.7) return 'border-l-green-500 bg-[#131C2E]';
+                  if (point >= 3.0) return 'border-l-primary bg-[#131C2E]';
+                  if (point >= 2.0) return 'border-l-orange-400 bg-[#131C2E]';
+                  return 'border-l-red-500 bg-[#131C2E]';
                 };
                 
                 return (
-                  <div key={module.id} className={`group relative flex items-center gap-4 p-4 rounded-2xl border-l-4 ${getGradeColor(module.grade)} hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01] bg-white/90 backdrop-blur-sm border border-slate-200/50 hover:border-slate-300/50`}>
+                  <div key={module.id} className={`group flex items-center gap-4 p-4 rounded border-2 border-slate-800 border-l-4 ${getGradeColor(module.grade)}`}>
                     {/* Module Number Badge */}
-                    <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-700 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg flex-shrink-0">
+                    <div className="w-8 h-8 bg-slate-800 text-white rounded flex items-center justify-center text-sm font-bold flex-shrink-0 border border-slate-700">
                       {index + 1}
                     </div>
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
-                        <h4 className="font-bold text-slate-800 text-base truncate group-hover:text-primary transition-colors duration-200">{module.name}</h4>
-                        <span className={`px-3 py-1.5 rounded-xl text-sm font-bold shadow-md ${
-                          gradePoint >= 3.7 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white' :
-                          gradePoint >= 3.0 ? 'bg-gradient-to-r from-primary to-orange-600 text-white' :
-                          gradePoint >= 2.0 ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white' :
-                          'bg-gradient-to-r from-red-500 to-red-600 text-white'
+                        <h4 className="font-bold text-slate-200 text-base truncate">{module.name}</h4>
+                        <span className={`px-2.5 py-1 rounded text-xs font-bold ${
+                          gradePoint >= 3.7 ? 'bg-green-500 text-black' :
+                          gradePoint >= 3.0 ? 'bg-primary text-black' :
+                          gradePoint >= 2.0 ? 'bg-orange-400 text-black' :
+                          'bg-red-500 text-white'
                         }`}>
                           {module.grade}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                        <span className="text-primary">⚖️</span>
-                        <span>{module.credits} credits</span>
+                      <div className="flex items-center gap-2 text-sm text-slate-300 font-medium">
+                        <span>{module.credits} Credits</span>
                       </div>
                     </div>
                   </div>
@@ -361,15 +348,10 @@ const GpaCalculator: React.FC = () => {
         )}
 
         {/* GPA Circular Progress */}
-        <div className="bg-gradient-to-br from-white to-slate-50 rounded-3xl shadow-2xl border border-slate-200/50 p-6 sm:p-10 animate-scale-in backdrop-blur-sm">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="p-3 bg-gradient-to-br from-primary/20 to-orange-200/30 rounded-2xl shadow-lg">
-              <span className="text-2xl sm:text-3xl">🎯</span>
-              </div>
-              <div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 font-display">GPA Overview</h3>
-              <p className="text-slate-600 text-sm sm:text-base mt-1">Track your academic performance</p>
-            </div>
+        <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-6 sm:p-10">
+          <div className="mb-8 border-b border-slate-800/80 pb-4">
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 font-display">GPA Overview</h3>
+            <p className="text-slate-300 text-sm sm:text-base mt-1">Track your academic performance</p>
           </div>
           
           <div className="flex flex-col items-center">
@@ -379,7 +361,7 @@ const GpaCalculator: React.FC = () => {
                 {/* Background Arc */}
                 <path
                   d="M 20 80 A 80 80 0 0 1 180 80"
-                  stroke="#E5E7EB"
+                  stroke="#1E293B"
                   strokeWidth="12"
                   fill="none"
                   strokeLinecap="round"
@@ -388,59 +370,52 @@ const GpaCalculator: React.FC = () => {
                 <path
                   d="M 20 80 A 80 80 0 0 1 180 80"
                   stroke={
-                    calculateGPA() >= 3.7 ? '#22C55E' :
-                    calculateGPA() >= 3.0 ? '#F88A22' :
-                    calculateGPA() >= 2.0 ? '#F88A22' :
-                    '#F88A22'
+                    calculateGPA() >= 3.7 ? '#22C55E' : '#FF7A00'
                   }
                   strokeWidth="12"
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray={`${(calculateGPA() / 4.0) * 251.2} 251.2`}
-                  className="transition-all duration-1000 ease-out"
                 />
               </svg>
               {/* Center Content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 sm:pt-8">
                 <div className={`text-2xl sm:text-4xl font-bold font-display ${
-                  calculateGPA() >= 3.7 ? 'text-green-600' :
-                  calculateGPA() >= 3.0 ? 'text-primary' :
-                  calculateGPA() >= 2.0 ? 'text-primary' :
-                  'text-primary'
+                  calculateGPA() >= 3.7 ? 'text-green-500' : 'text-primary'
                 }`}>
                   {modules.length > 0 ? calculateGPA().toFixed(2) : '0.00'}
               </div>
-                <div className="text-xs sm:text-sm font-semibold text-text-secondary">Cumulative GPA</div>
+                <div className="text-xs sm:text-sm font-semibold text-slate-300">Cumulative GPA</div>
               </div>
             </div>
             
             {/* GPA Range */}
             <div className="flex justify-between w-full max-w-36 sm:max-w-48 mb-4 sm:mb-6 px-2 sm:px-4">
-              <span className="text-xs sm:text-sm text-text-secondary">0.0</span>
-              <span className="text-xs sm:text-sm text-text-secondary">4.0</span>
+              <span className="text-xs sm:text-sm text-slate-300">0.0</span>
+              <span className="text-xs sm:text-sm text-slate-300">4.0</span>
             </div>
 
             {/* Summary Stats */}
             {modules.length > 0 && (
               <div className="grid grid-cols-3 gap-4 sm:gap-6 w-full">
-                <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all duration-300 border border-slate-200/50 shadow-lg backdrop-blur-sm">
-                  <div className="text-xl sm:text-2xl font-bold text-slate-800">{modules.length}</div>
-                  <div className="text-sm sm:text-base font-semibold text-slate-600">Modules</div>
+                <div className="bg-[#131C2E] rounded border border-slate-800 p-4 sm:p-6 text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-slate-100">{modules.length}</div>
+                  <div className="text-sm sm:text-base font-bold text-slate-300">Modules</div>
                 </div>
-                <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all duration-300 border border-slate-200/50 shadow-lg backdrop-blur-sm">
-                  <div className="text-xl sm:text-2xl font-bold text-slate-800">
+                <div className="bg-[#131C2E] rounded border border-slate-800 p-4 sm:p-6 text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-slate-100">
                     {modules.reduce((sum, module) => sum + module.credits, 0)}
                   </div>
-                  <div className="text-sm sm:text-base font-semibold text-slate-600">Credits</div>
+                  <div className="text-sm sm:text-base font-bold text-slate-300">Credits</div>
                 </div>
-                <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl p-4 sm:p-6 text-center hover:shadow-xl transition-all duration-300 border border-slate-200/50 shadow-lg backdrop-blur-sm">
-                  <div className="text-xl sm:text-2xl font-bold text-slate-800">
+                <div className="bg-[#131C2E] rounded border border-slate-800 p-4 sm:p-6 text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-slate-100">
                     {modules.length > 0 ? calculateTotalGradePoints().toFixed(1) : '0.0'}
                   </div>
-                  <div className="text-sm sm:text-base font-semibold text-slate-600">Points</div>
-          </div>
-        </div>
-      )}
+                  <div className="text-sm sm:text-base font-bold text-slate-300">Points</div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
