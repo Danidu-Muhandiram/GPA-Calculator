@@ -40,20 +40,7 @@ const GpaCalculator: React.FC = () => {
   // Delete a module form
   const removeFormSet = (formSetId: string) => {
     if (formSets.length > 1) {
-      const formSetToRemove = formSets.find(fs => fs.id === formSetId);
-      
-      // If this form has module data, find and remove the matching module from the list
-      if (formSetToRemove?.module.name && formSetToRemove.module.credits > 0 && formSetToRemove.module.grade) {
-        const matchingModule = modules.find(module => 
-          module.name === formSetToRemove.module.name &&
-          module.credits === formSetToRemove.module.credits &&
-          module.grade === formSetToRemove.module.grade
-        );
-        
-        if (matchingModule) {
-          setModules(prevModules => prevModules.filter(module => module.id !== matchingModule.id));
-        }
-      }
+      setModules(prevModules => prevModules.filter(module => module.id !== formSetId));
       
       setFormSets(formSets.filter(fs => fs.id !== formSetId));
     }
@@ -63,22 +50,20 @@ const GpaCalculator: React.FC = () => {
   const addModule = (formSetId: string) => {
     const formSet = formSets.find(fs => fs.id === formSetId);
     if (formSet && formSet.module.name && formSet.module.credits > 0 && formSet.module.grade) {
-      // Don't add duplicates
-      const existingModule = modules.find(module => 
-        module.name === formSet.module.name &&
-        module.credits === formSet.module.credits &&
-        module.grade === formSet.module.grade
-      );
-      
-      if (existingModule) {
-        return;
-      }
-      
       const newModule = {
         ...formSet.module,
-        id: Date.now().toString()
+        id: formSetId
       };
-      setModules([...modules, newModule]);
+      setModules(prevModules => {
+        const existingIndex = prevModules.findIndex(module => module.id === formSetId);
+        if (existingIndex >= 0) {
+          const nextModules = [...prevModules];
+          nextModules[existingIndex] = newModule;
+          return nextModules;
+        }
+
+        return [...prevModules, newModule];
+      });
       
       // Mark this form as completed
       setFormSets(formSets.map(fs => 
@@ -91,11 +76,22 @@ const GpaCalculator: React.FC = () => {
 
   // Handle input changes
   const updateFormSet = (formSetId: string, field: keyof Module, value: string | number) => {
-    setFormSets(formSets.map(fs => 
+    const updatedFormSets = formSets.map(fs => 
       fs.id === formSetId 
         ? { ...fs, module: { ...fs.module, [field]: value } }
         : fs
-    ));
+    );
+
+    setFormSets(updatedFormSets);
+
+    const updatedFormSet = updatedFormSets.find(fs => fs.id === formSetId);
+    if (updatedFormSet?.module.name && updatedFormSet.module.credits > 0 && updatedFormSet.module.grade) {
+      setModules(prevModules => prevModules.map(module => 
+        module.id === formSetId
+          ? { ...updatedFormSet.module, id: formSetId }
+          : module
+      ));
+    }
   };
 
 
