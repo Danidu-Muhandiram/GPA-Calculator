@@ -12,7 +12,6 @@ interface Module {
 interface FormSet {
   id: string;
   module: Module;
-  isEditing: boolean;
 }
 
 // Main GPA Calculator component
@@ -22,17 +21,14 @@ const GpaCalculator: React.FC = () => {
     {
       id: 'default',
       module: { id: '', name: '', credits: 0, grade: '' },
-      isEditing: true
     }
   ]);
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   // Create another module form
   const addNewFormSet = () => {
     const newFormSet: FormSet = {
       id: Date.now().toString(),
       module: { id: '', name: '', credits: 0, grade: '' },
-      isEditing: true
     };
     setFormSets([...formSets, newFormSet]);
   };
@@ -43,34 +39,6 @@ const GpaCalculator: React.FC = () => {
       setModules(prevModules => prevModules.filter(module => module.id !== formSetId));
       
       setFormSets(formSets.filter(fs => fs.id !== formSetId));
-    }
-  };
-
-  // Save module to the list
-  const addModule = (formSetId: string) => {
-    const formSet = formSets.find(fs => fs.id === formSetId);
-    if (formSet && formSet.module.name && formSet.module.credits > 0 && formSet.module.grade) {
-      const newModule = {
-        ...formSet.module,
-        id: formSetId
-      };
-      setModules(prevModules => {
-        const existingIndex = prevModules.findIndex(module => module.id === formSetId);
-        if (existingIndex >= 0) {
-          const nextModules = [...prevModules];
-          nextModules[existingIndex] = newModule;
-          return nextModules;
-        }
-
-        return [...prevModules, newModule];
-      });
-      
-      // Mark this form as completed
-      setFormSets(formSets.map(fs => 
-        fs.id === formSetId 
-          ? { ...fs, module: { ...newModule }, isEditing: false }
-          : fs
-      ));
     }
   };
 
@@ -85,19 +53,29 @@ const GpaCalculator: React.FC = () => {
     setFormSets(updatedFormSets);
 
     const updatedFormSet = updatedFormSets.find(fs => fs.id === formSetId);
-    if (updatedFormSet?.module.name && updatedFormSet.module.credits > 0 && updatedFormSet.module.grade) {
-      setModules(prevModules => prevModules.map(module => 
-        module.id === formSetId
-          ? { ...updatedFormSet.module, id: formSetId }
-          : module
-      ));
-    }
-  };
+    const isComplete = Boolean(updatedFormSet?.module.name && updatedFormSet.module.credits > 0 && updatedFormSet.module.grade);
 
+    setModules(prevModules => {
+      const existingIndex = prevModules.findIndex(module => module.id === formSetId);
 
-  // Old function - keeping for compatibility
-  const handleInputChange = (field: keyof Module, value: string | number) => {
-    // Not used anymore
+      if (isComplete && updatedFormSet) {
+        const nextModule = { ...updatedFormSet.module, id: formSetId };
+
+        if (existingIndex >= 0) {
+          const nextModules = [...prevModules];
+          nextModules[existingIndex] = nextModule;
+          return nextModules;
+        }
+
+        return [...prevModules, nextModule];
+      }
+
+      if (!isComplete && existingIndex >= 0) {
+        return prevModules.filter(module => module.id !== formSetId);
+      }
+
+      return prevModules;
+    });
   };
 
   // Calculate GPA based on modules
@@ -240,40 +218,12 @@ const GpaCalculator: React.FC = () => {
         <div className="mt-4">
             <div className="flex items-center gap-3">
           <button
-                onClick={() => {
-                  // Check if all modules are valid before adding
-                  const invalidModules: string[] = [];
-                  formSets.forEach((formSet, index) => {
-                    if (!formSet.module.name || formSet.module.credits <= 0 || !formSet.module.grade) {
-                      invalidModules.push(`Module ${index + 1}`);
-                    }
-                  });
-
-                  if (invalidModules.length === 0) {
-                    // Add all valid modules at once
-                    formSets.forEach(formSet => {
-                      if (formSet.module.name && formSet.module.credits > 0 && formSet.module.grade) {
-                        addModule(formSet.id);
-                      }
-                    });
-                    // Add new empty form
-                    addNewFormSet();
-                    setErrorMessage(''); // Clear any previous error
-                  } else {
-                    // Show error message for invalid modules
-                    setErrorMessage(`Please fill in all required fields for: ${invalidModules.join(', ')}`);
-                  }
-                }}
+                onClick={addNewFormSet}
                 className="bg-primary text-black px-6 py-2.5 rounded hover:bg-primary/95 transition-colors font-bold flex items-center gap-2 text-sm border-2 border-primary"
               >
                 <span className="text-base font-extrabold">+</span>
             Add Module
           </button>
-              {errorMessage && (
-                <div className="text-red-400 text-sm font-bold bg-red-950/20 px-3 py-2 rounded border border-red-900/50">
-                  {errorMessage}
-                </div>
-              )}
             </div>
           </div>
         </div>
