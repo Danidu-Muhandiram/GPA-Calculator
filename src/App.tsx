@@ -1,8 +1,12 @@
 import React from 'react';
 import GpaCalculator from './components/GpaCalculator';
 
+type ActiveView = 'modules' | 'overall';
+
 // Main app component with navbar and content sections
 function App() {
+  const [activeView, setActiveView] = React.useState<ActiveView>('modules');
+
   return (
     <div className="min-h-screen bg-[#080C14] text-text">
       {/* Navigation bar */}
@@ -16,6 +20,30 @@ function App() {
                 <span className="sm:hidden">GPA Calc</span>
               </h1>
             </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => setActiveView('modules')}
+                className={`px-3 sm:px-4 py-2 rounded border text-xs sm:text-sm font-bold transition-colors ${
+                  activeView === 'modules'
+                    ? 'bg-primary text-black border-primary'
+                    : 'bg-transparent text-slate-300 border-slate-700 hover:border-slate-500 hover:text-white'
+                }`}
+              >
+                GPA
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveView('overall')}
+                className={`px-3 sm:px-4 py-2 rounded border text-xs sm:text-sm font-bold transition-colors ${
+                  activeView === 'overall'
+                    ? 'bg-primary text-black border-primary'
+                    : 'bg-transparent text-slate-300 border-slate-700 hover:border-slate-500 hover:text-white'
+                }`}
+              >
+                Overall GPA
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -24,13 +52,17 @@ function App() {
       <main className="max-w-6xl mx-auto py-8 px-4 sm:px-6 pt-20 sm:pt-24">
         <div>
           <div className="text-center mb-6 sm:mb-8 mt-6 sm:mt-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-2 font-display">Calculate your GPA</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-2 font-display">
+              {activeView === 'modules' ? 'Calculate your GPA' : 'Calculate your overall GPA'}
+            </h2>
             <p className="text-base sm:text-lg text-slate-400 mx-auto leading-relaxed max-w-4xl px-4">
-              Track your academic progress and calculate your GPA with our intuitive grade calculator
+              {activeView === 'modules'
+                ? 'Track your academic progress and calculate your GPA with our intuitive grade calculator'
+                : 'Use cumulative credits and cumulative grade points to calculate the correct overall GPA'}
             </p>
           </div>
           {/* GPA Calculator component */}
-          <GpaCalculator />
+          <GpaCalculator activeView={activeView} />
         </div>
       </main>
     </div>

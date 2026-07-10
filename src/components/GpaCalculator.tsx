@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-// Interface for a single module
+type ActiveView = 'modules' | 'overall';
+
 interface Module {
   id: string;
   name: string;
@@ -14,15 +15,24 @@ interface FormSet {
   module: Module;
 }
 
+interface GpaCalculatorProps {
+  activeView: ActiveView;
+}
+
 // Main GPA Calculator component
-const GpaCalculator: React.FC = () => {
+const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
+  // Module GPA state
   const [modules, setModules] = useState<Module[]>([]);
   const [formSets, setFormSets] = useState<FormSet[]>([
     {
       id: 'default',
       module: { id: '', name: '', credits: 0, grade: '' },
-    }
+    },
   ]);
+  const [cumulativeCredits, setCumulativeCredits] = useState('');
+  const [cumulativeGradePoints, setCumulativeGradePoints] = useState('');
+  const [showTheoryFaq, setShowTheoryFaq] = useState(false);
+  const [showExampleFaq, setShowExampleFaq] = useState(false);
 
   // Create another module form
   const addNewFormSet = () => {
@@ -36,27 +46,28 @@ const GpaCalculator: React.FC = () => {
   // Delete a module form
   const removeFormSet = (formSetId: string) => {
     if (formSets.length > 1) {
-      setModules(prevModules => prevModules.filter(module => module.id !== formSetId));
-      
-      setFormSets(formSets.filter(fs => fs.id !== formSetId));
+      setModules((prevModules) => prevModules.filter((module) => module.id !== formSetId));
+      setFormSets(formSets.filter((fs) => fs.id !== formSetId));
     }
   };
 
   // Handle input changes
   const updateFormSet = (formSetId: string, field: keyof Module, value: string | number) => {
-    const updatedFormSets = formSets.map(fs => 
-      fs.id === formSetId 
-        ? { ...fs, module: { ...fs.module, [field]: value } }
-        : fs
+    const updatedFormSets = formSets.map((fs) =>
+      fs.id === formSetId ? { ...fs, module: { ...fs.module, [field]: value } } : fs
     );
 
     setFormSets(updatedFormSets);
 
-    const updatedFormSet = updatedFormSets.find(fs => fs.id === formSetId);
-    const isComplete = Boolean(updatedFormSet?.module.name && updatedFormSet.module.credits > 0 && updatedFormSet.module.grade);
+    const updatedFormSet = updatedFormSets.find((fs) => fs.id === formSetId);
+    const isComplete = Boolean(
+      updatedFormSet?.module.name &&
+        updatedFormSet.module.credits > 0 &&
+        updatedFormSet.module.grade
+    );
 
-    setModules(prevModules => {
-      const existingIndex = prevModules.findIndex(module => module.id === formSetId);
+    setModules((prevModules) => {
+      const existingIndex = prevModules.findIndex((module) => module.id === formSetId);
 
       if (isComplete && updatedFormSet) {
         const nextModule = { ...updatedFormSet.module, id: formSetId };
@@ -71,55 +82,178 @@ const GpaCalculator: React.FC = () => {
       }
 
       if (!isComplete && existingIndex >= 0) {
-        return prevModules.filter(module => module.id !== formSetId);
+        return prevModules.filter((module) => module.id !== formSetId);
       }
 
       return prevModules;
     });
   };
 
-  // Calculate GPA based on modules
-  const calculateGPA = () => {
-    if (modules.length === 0) return 0;
-    
-    let totalGradePoints = 0;
-    let totalCredits = 0;
-    
-    modules.forEach(module => {
-      const gradePoint = getGradePoint(module.grade);
-      totalGradePoints += gradePoint * module.credits;
-      totalCredits += module.credits;
-    });
-    
-    return totalCredits > 0 ? totalGradePoints / totalCredits : 0;
-  };
-
   // Get grade point value for a grade
   const getGradePoint = (grade: string): number => {
     const gradePoints: { [key: string]: number } = {
       'A+': 4.0,
-      'A': 4.0,
+      A: 4.0,
       'A-': 3.7,
       'B+': 3.3,
-      'B': 3.0,
+      B: 3.0,
       'B-': 2.7,
       'C+': 2.3,
-      'C': 2.0,
+      C: 2.0,
       'C-': 1.7,
       'D+': 1.3,
-      'D': 1.0,
-      'F': 0.0
+      D: 1.0,
+      F: 0.0,
     };
-    return gradePoints[grade] || 0;
+
+    return gradePoints[grade] ?? 0;
+  };
+
+  // Calculate GPA based on modules
+  const calculateGPA = () => {
+    if (modules.length === 0) return 0;
+
+    let totalGradePoints = 0;
+    let totalCredits = 0;
+
+    modules.forEach((module) => {
+      const gradePoint = getGradePoint(module.grade);
+      totalGradePoints += gradePoint * module.credits;
+      totalCredits += module.credits;
+    });
+
+    return totalCredits > 0 ? totalGradePoints / totalCredits : 0;
   };
 
   // Calculate total grade points
   const calculateTotalGradePoints = () => {
-    return modules.reduce((sum, module) => {
-      return sum + (getGradePoint(module.grade) * module.credits);
-    }, 0);
+    return modules.reduce((sum, module) => sum + getGradePoint(module.grade) * module.credits, 0);
   };
 
+  // Parse overall GPA input values
+  const parseOverallInput = (value: string) => {
+    const parsedValue = Number(value);
+    return Number.isFinite(parsedValue) ? parsedValue : 0;
+  };
+
+  // Calculate CGPA from cumulative values
+  const calculateOverallGPA = () => {
+    const credits = parseOverallInput(cumulativeCredits);
+    const gradePoints = parseOverallInput(cumulativeGradePoints);
+
+    if (credits <= 0) return 0;
+
+    return gradePoints / credits;
+  };
+
+  const overallCredits = parseOverallInput(cumulativeCredits);
+  const overallGradePoints = parseOverallInput(cumulativeGradePoints);
+  const overallGpa = calculateOverallGPA();
+
+  const overallFaqItems = [
+    'Overall GPA is weighted, not a simple average.',
+    'Use total cumulative grade points and total cumulative credits.',
+    'Formula: CGPA = Total Grade Points ÷ Total Credits.',
+    'Equal credits: (105 + 96) ÷ (30 + 30) = 3.35',
+    'Different credits: ((40 × 3.50) + (20 × 3.20)) ÷ 60 = 3.40',
+  ];
+
+  // Overall GPA view
+  if (activeView === 'overall') {
+    return (
+      <div className="space-y-8 animate-fade-in">
+        <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-4 sm:p-8">
+          {/* Overall GPA inputs and result */}
+          <div className="mb-6 sm:mb-8 border-b border-slate-800/80 pb-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-100 font-display">Overall GPA</h3>
+            <p className="text-slate-300 text-sm sm:text-base mt-1">Calculate CGPA from cumulative totals</p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-[#131C2E] rounded border border-slate-800 p-4 sm:p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-slate-200 mb-2">Cumulative Credits</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={cumulativeCredits}
+                  onChange={(e) => setCumulativeCredits(e.target.value)}
+                  placeholder="e.g. 120"
+                  className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-200 mb-2">Cumulative Grade Points</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={cumulativeGradePoints}
+                  onChange={(e) => setCumulativeGradePoints(e.target.value)}
+                  placeholder="e.g. 396"
+                  className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="bg-[#131C2E] rounded border border-slate-800 p-4 sm:p-6 flex flex-col items-center justify-center text-center space-y-4">
+              <div className="text-sm uppercase tracking-[0.2em] text-slate-400 font-semibold">Overall GPA</div>
+              <div className={`text-4xl sm:text-5xl font-bold font-display ${overallGpa >= 3.7 ? 'text-green-500' : 'text-primary'}`}>
+                {overallCredits > 0 ? overallGpa.toFixed(2) : '0.00'}
+              </div>
+              <div className="text-slate-300 text-sm sm:text-base max-w-md">
+                This is the weighted GPA derived from total grade points and total credits, which stays correct even when yearly credit loads differ.
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full pt-2">
+                <div className="bg-[#0A0E1A] rounded border border-slate-800 p-3">
+                  <div className="text-xs text-slate-400">Credits</div>
+                  <div className="text-lg font-bold text-slate-100">{overallCredits.toFixed(2)}</div>
+                </div>
+                <div className="bg-[#0A0E1A] rounded border border-slate-800 p-3">
+                  <div className="text-xs text-slate-400">Grade Points</div>
+                  <div className="text-lg font-bold text-slate-100">{overallGradePoints.toFixed(2)}</div>
+                </div>
+                <div className="bg-[#0A0E1A] rounded border border-slate-800 p-3">
+                  <div className="text-xs text-slate-400">CGPA</div>
+                  <div className="text-lg font-bold text-slate-100">{overallCredits > 0 ? overallGpa.toFixed(2) : '0.00'}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ / theory section */}
+        <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-6 sm:p-8">
+          <button
+            type="button"
+            onClick={() => setShowTheoryFaq((prev) => !prev)}
+            className="w-full flex items-center justify-between gap-4 text-left"
+            aria-expanded={showTheoryFaq}
+          >
+            <h3 className="text-xl sm:text-xl font-bold text-slate-100 font-display">Why this formula is correct</h3>
+            <span className="text-primary text-sm font-bold uppercase tracking-[0.2em]">
+              {showTheoryFaq ? 'Hide' : 'Show'}
+            </span>
+          </button>
+
+          {showTheoryFaq && (
+            <div className="mt-4 space-y-3 text-slate-300 leading-relaxed">
+              {overallFaqItems.map((point) => (
+                <p key={point} className="bg-[#131C2E] border border-slate-800 rounded p-4">
+                  {point}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Module GPA view
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Add Course Form */}
@@ -145,46 +279,46 @@ const GpaCalculator: React.FC = () => {
           </div>
 
           {/* Module Rows */}
-          {formSets.map((formSet, index) => (
+          {formSets.map((formSet) => (
             <div key={formSet.id} className="grid grid-cols-12 mb-4 items-center">
-          {/* Module Name Input */}
+              {/* Module Name Input */}
               <div className="col-span-7 pr-4">
-            <input
-              type="text"
-                    value={formSet.module.name}
-                    onChange={(e) => updateFormSet(formSet.id, 'name', e.target.value)}
-                    placeholder="Module name (required)"
-                    required
-                    className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
-            />
-          </div>
+                <input
+                  type="text"
+                  value={formSet.module.name}
+                  onChange={(e) => updateFormSet(formSet.id, 'name', e.target.value)}
+                  placeholder="Module name (required)"
+                  required
+                  className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
+                />
+              </div>
 
-          {/* Credits Input */}
+              {/* Credits Input */}
               <div className="col-span-2 px-2">
-            <input
-              type="number"
-                    value={formSet.module.credits || ''}
-                    onChange={(e) => {
-                      const value = parseInt(e.target.value) || 0;
-                      if (value >= 0) {
-                        updateFormSet(formSet.id, 'credits', value);
-                      }
-                    }}
-              placeholder="3"
-                    min="0"
-              max="10"
-                    className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
-            />
-          </div>
+                <input
+                  type="number"
+                  value={formSet.module.credits || ''}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 0;
+                    if (value >= 0) {
+                      updateFormSet(formSet.id, 'credits', value);
+                    }
+                  }}
+                  placeholder="3"
+                  min="0"
+                  max="10"
+                  className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
+                />
+              </div>
 
-          {/* Grade Select */}
+              {/* Grade Select */}
               <div className="col-span-2 px-2">
-            <select
+                <select
                   value={formSet.module.grade}
                   onChange={(e) => updateFormSet(formSet.id, 'grade', e.target.value)}
                   className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
-            >
-              <option value="" className="bg-[#0A0E1A]">Select Grade</option>
+                >
+                  <option value="" className="bg-[#0A0E1A]">Select Grade</option>
                   <option value="A+" className="bg-[#0A0E1A]">A+</option>
                   <option value="A" className="bg-[#0A0E1A]">A</option>
                   <option value="A-" className="bg-[#0A0E1A]">A-</option>
@@ -197,8 +331,8 @@ const GpaCalculator: React.FC = () => {
                   <option value="D+" className="bg-[#0A0E1A]">D+</option>
                   <option value="D" className="bg-[#0A0E1A]">D</option>
                   <option value="F" className="bg-[#0A0E1A]">F</option>
-            </select>
-          </div>
+                </select>
+              </div>
 
               {/* Remove Button */}
               <div className="col-span-1 flex justify-center">
@@ -211,19 +345,19 @@ const GpaCalculator: React.FC = () => {
                   </button>
                 )}
               </div>
-        </div>
+            </div>
           ))}
 
-        {/* Add Module Button */}
-        <div className="mt-4">
+          {/* Add Module Button */}
+          <div className="mt-4">
             <div className="flex items-center gap-3">
-          <button
+              <button
                 onClick={addNewFormSet}
                 className="bg-primary text-black px-6 py-2.5 rounded hover:bg-primary/95 transition-colors font-bold flex items-center gap-2 text-sm border-2 border-primary"
               >
                 <span className="text-base font-extrabold">+</span>
-            Add Module
-          </button>
+                Add Module
+              </button>
             </div>
           </div>
         </div>
@@ -234,7 +368,7 @@ const GpaCalculator: React.FC = () => {
         {/* Empty State */}
         {modules.length === 0 && (
           <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-8 sm:p-16 text-center">
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 mb-4 sm:mb-6 font-display">Ready to calculate your GPA?</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-100 mb-4 sm:mb-6 font-display">Ready to calculate your GPA?</h3>
             <p className="text-lg sm:text-xl text-slate-300 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-4">
               Add your first module above to start tracking your academic progress and see your GPA in real-time!
             </p>
@@ -251,7 +385,7 @@ const GpaCalculator: React.FC = () => {
               <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 font-display">Your Modules</h3>
               <p className="text-slate-300 text-sm sm:text-base mt-1">Track your academic progress</p>
             </div>
-            
+
             <div className="space-y-3">
               {modules.map((module, index) => {
                 const gradePoint = getGradePoint(module.grade);
@@ -262,23 +396,27 @@ const GpaCalculator: React.FC = () => {
                   if (point >= 2.0) return 'border-l-orange-400 bg-[#131C2E]';
                   return 'border-l-red-500 bg-[#131C2E]';
                 };
-                
+
                 return (
                   <div key={module.id} className={`group flex items-center gap-4 p-4 rounded border-2 border-slate-800 border-l-4 ${getGradeColor(module.grade)}`}>
-                    {/* Module Number Badge */}
                     <div className="w-8 h-8 bg-slate-800 text-white rounded flex items-center justify-center text-sm font-bold flex-shrink-0 border border-slate-700">
                       {index + 1}
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
                         <h4 className="font-bold text-slate-200 text-base truncate">{module.name}</h4>
-                        <span className={`px-2.5 py-1 rounded text-xs font-bold ${
-                          gradePoint >= 3.7 ? 'bg-green-500 text-black' :
-                          gradePoint >= 3.0 ? 'bg-primary text-black' :
-                          gradePoint >= 2.0 ? 'bg-orange-400 text-black' :
-                          'bg-red-500 text-white'
-                        }`}>
+                        <span
+                          className={`px-2.5 py-1 rounded text-xs font-bold ${
+                            gradePoint >= 3.7
+                              ? 'bg-green-500 text-black'
+                              : gradePoint >= 3.0
+                              ? 'bg-primary text-black'
+                              : gradePoint >= 2.0
+                              ? 'bg-orange-400 text-black'
+                              : 'bg-red-500 text-white'
+                          }`}
+                        >
                           {module.grade}
                         </span>
                       </div>
@@ -296,52 +434,36 @@ const GpaCalculator: React.FC = () => {
         {/* GPA Circular Progress */}
         <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-6 sm:p-10">
           <div className="mb-8 border-b border-slate-800/80 pb-4">
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 font-display">GPA Overview</h3>
+            <h3 className="text-2xl sm:text-2xl font-bold text-slate-100 mb-4 sm:mb-6 font-display">GPA Overview</h3>
             <p className="text-slate-300 text-sm sm:text-base mt-1">Track your academic performance</p>
           </div>
-          
+
           <div className="flex flex-col items-center">
-            {/* Speedometer-style Progress */}
             <div className="relative w-36 h-24 sm:w-48 sm:h-32 mb-4 sm:mb-6">
               <svg className="w-36 h-24 sm:w-48 sm:h-32" viewBox="0 0 200 100">
-                {/* Background Arc */}
+                <path d="M 20 80 A 80 80 0 0 1 180 80" stroke="#1E293B" strokeWidth="12" fill="none" strokeLinecap="round" />
                 <path
                   d="M 20 80 A 80 80 0 0 1 180 80"
-                  stroke="#1E293B"
-                  strokeWidth="12"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-                {/* Progress Arc */}
-                <path
-                  d="M 20 80 A 80 80 0 0 1 180 80"
-                  stroke={
-                    calculateGPA() >= 3.7 ? '#22C55E' : '#FF7A00'
-                  }
+                  stroke={calculateGPA() >= 3.7 ? '#22C55E' : '#FF7A00'}
                   strokeWidth="12"
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray={`${(calculateGPA() / 4.0) * 251.2} 251.2`}
                 />
               </svg>
-              {/* Center Content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 sm:pt-8">
-                <div className={`text-2xl sm:text-4xl font-bold font-display ${
-                  calculateGPA() >= 3.7 ? 'text-green-500' : 'text-primary'
-                }`}>
+                <div className={`text-2xl sm:text-4xl font-bold font-display ${calculateGPA() >= 3.7 ? 'text-green-500' : 'text-primary'}`}>
                   {modules.length > 0 ? calculateGPA().toFixed(2) : '0.00'}
-              </div>
+                </div>
                 <div className="text-xs sm:text-sm font-semibold text-slate-300">Cumulative GPA</div>
               </div>
             </div>
-            
-            {/* GPA Range */}
+
             <div className="flex justify-between w-full max-w-36 sm:max-w-48 mb-4 sm:mb-6 px-2 sm:px-4">
               <span className="text-xs sm:text-sm text-slate-300">0.0</span>
               <span className="text-xs sm:text-sm text-slate-300">4.0</span>
             </div>
 
-            {/* Summary Stats */}
             {modules.length > 0 && (
               <div className="grid grid-cols-3 gap-4 sm:gap-6 w-full">
                 <div className="bg-[#131C2E] rounded border border-slate-800 p-4 sm:p-6 text-center">
@@ -356,7 +478,7 @@ const GpaCalculator: React.FC = () => {
                 </div>
                 <div className="bg-[#131C2E] rounded border border-slate-800 p-4 sm:p-6 text-center">
                   <div className="text-xl sm:text-2xl font-bold text-slate-100">
-                    {modules.length > 0 ? calculateTotalGradePoints().toFixed(1) : '0.0'}
+                    {calculateTotalGradePoints().toFixed(1)}
                   </div>
                   <div className="text-sm sm:text-base font-bold text-slate-300">Points</div>
                 </div>
