@@ -4,20 +4,20 @@ A modern and easy-to-use GPA calculator designed for university students to calc
 
 The application supports cumulative GPA calculations using total credits and total grade points, ensuring correct results even when semester or yearly credit loads differ.
 
-## Live Demo
+## 🌐 Live Demo
 
-🔗 **Website:** https://your-domain.com
+<a href="https://unigpa.vercel.app">
+  <img src="https://img.shields.io/badge/🚀%20Visit%20UniGPA-F88A22?style=for-the-badge&logo=vercel&logoColor=white" alt="UniGPA">
+</a>
+
 
 ## Screenshots
 
-### Home Page
-![Home Page](./screenshots/home.png)
-
 ### Module GPA Calculator
-![Module GPA Calculator](./screenshots/module-gpa.png)
+![Module GPA Calculator](public/screenshots/gpacalc1.jpg)
 
 ### Overall GPA Calculator
-![Overall GPA Calculator](./screenshots/overall-gpa.png)
+![Overall GPA Calculator](public/screenshots/gpacalc2.jpg)
 
 
 ## Features
@@ -70,7 +70,7 @@ CGPA = 3.35
 This project was built to provide students with a simple, reliable, and visually appealing way to calculate GPA and CGPA without manually performing weighted calculations.
 
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
