@@ -179,7 +179,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
                   step="0.01"
                   value={cumulativeCredits}
                   onChange={(e) => setCumulativeCredits(e.target.value)}
-                  placeholder="e.g. 120"
+                  placeholder="e.g. 120 (total credits)"
                   className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
                 />
               </div>
@@ -192,7 +192,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
                   step="0.01"
                   value={cumulativeGradePoints}
                   onChange={(e) => setCumulativeGradePoints(e.target.value)}
-                  placeholder="e.g. 396"
+                  placeholder="e.g. 396 (total grade points)"
                   className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
                 />
               </div>
@@ -204,7 +204,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
                 {overallCredits > 0 ? overallGpa.toFixed(2) : '0.00'}
               </div>
               <div className="text-slate-300 text-sm sm:text-base max-w-md">
-                This is the weighted GPA derived from total grade points and total credits, which stays correct even when yearly credit loads differ.
+                Weighted GPA based on cumulative grade points and credits.
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full pt-2">
@@ -304,7 +304,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
                       updateFormSet(formSet.id, 'credits', value);
                     }
                   }}
-                  placeholder="3"
+                  placeholder="0"
                   min="0"
                   max="10"
                   className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
