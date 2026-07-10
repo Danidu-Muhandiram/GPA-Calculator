@@ -33,6 +33,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
   const [cumulativeGradePoints, setCumulativeGradePoints] = useState('');
   const [showTheoryFaq, setShowTheoryFaq] = useState(false);
   const [showExampleFaq, setShowExampleFaq] = useState(false);
+  const [showGradingSystem, setShowGradingSystem] = useState(false);
 
   // Create another module form
   const addNewFormSet = () => {
@@ -158,6 +159,21 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
     'Different credits: ((40 × 3.50) + (20 × 3.20)) ÷ 60 = 3.40',
   ];
 
+  const gradingSystemRows = [
+    { grade: 'A+', points: '4.00', range: '90 - 100' },
+    { grade: 'A', points: '4.00', range: '80 - 89' },
+    { grade: 'A-', points: '3.70', range: '75 - 79' },
+    { grade: 'B+', points: '3.30', range: '70 - 74' },
+    { grade: 'B', points: '3.00', range: '65 - 69' },
+    { grade: 'B-', points: '2.70', range: '60 - 64' },
+    { grade: 'C+', points: '2.30', range: '55 - 59' },
+    { grade: 'C', points: '2.00', range: '45 - 54' },
+    { grade: 'C-', points: '1.70', range: '40 - 44' },
+    { grade: 'D+', points: '1.30', range: '35 - 39' },
+    { grade: 'D', points: '1.00', range: '30 - 34' },
+    { grade: 'E', points: '0.00', range: '00 - 29' },
+  ];
+
   // Overall GPA view
   if (activeView === 'overall') {
     return (
@@ -249,6 +265,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
             </div>
           )}
         </div>
+
       </div>
     );
   }
@@ -330,7 +347,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
                   <option value="C-" className="bg-[#0A0E1A]">C-</option>
                   <option value="D+" className="bg-[#0A0E1A]">D+</option>
                   <option value="D" className="bg-[#0A0E1A]">D</option>
-                  <option value="F" className="bg-[#0A0E1A]">F</option>
+                  <option value="E" className="bg-[#0A0E1A]">F</option>
                 </select>
               </div>
 
@@ -485,6 +502,41 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Grading system reference */}
+        <div className="bg-[#0F1626] rounded border-2 border-slate-800 p-6 sm:p-8 lg:col-span-2">
+          <button
+            type="button"
+            onClick={() => setShowGradingSystem((prev) => !prev)}
+            className="w-full flex items-center justify-between gap-4 text-left"
+            aria-expanded={showGradingSystem}
+          >
+            <h3 className="text-lg sm:text-lg font-bold text-slate-100 font-display">Grading System</h3>
+            <span className="text-primary text-sm font-bold uppercase tracking-[0.2em]">
+              {showGradingSystem ? 'Hide' : 'Show'}
+            </span>
+          </button>
+
+          {showGradingSystem && (
+            <div className="mt-4 overflow-hidden rounded border border-slate-800 bg-[#131C2E]">
+              <div className="grid grid-cols-3 gap-0 bg-[#0A0E1A] text-slate-100 text-xs sm:text-sm font-bold uppercase tracking-[0.15em]">
+                <div className="px-4 py-3 border-r border-slate-800">Grade</div>
+                <div className="px-4 py-3 border-r border-slate-800 text-center">Grade Pts.</div>
+                <div className="px-4 py-3 text-center">Marks Range</div>
+              </div>
+
+              <div className="divide-y divide-slate-800">
+                {gradingSystemRows.map((row) => (
+                  <div key={row.grade} className="grid grid-cols-3 text-sm sm:text-base text-slate-200">
+                    <div className="px-4 py-3 border-r border-slate-800 font-semibold">{row.grade}</div>
+                    <div className="px-4 py-3 border-r border-slate-800 text-center">{row.points}</div>
+                    <div className="px-4 py-3 text-center">{row.range}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
