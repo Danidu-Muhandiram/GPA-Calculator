@@ -281,7 +281,7 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
         {/* Module Input Table */}
         <div className="bg-[#131C2E] rounded border border-slate-800 p-4">
           {/* Headers */}
-          <div className="grid grid-cols-12 gap-4 mb-4">
+          <div className="hidden sm:grid grid-cols-12 gap-4 mb-4">
             <div className="col-span-7">
               <h4 className="text-sm font-bold text-slate-200">Module Name</h4>
             </div>
@@ -296,21 +296,23 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
 
           {/* Module Rows */}
           {formSets.map((formSet) => (
-            <div key={formSet.id} className="grid grid-cols-12 mb-4 items-center">
+            <div key={formSet.id} className="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-0 mb-4 items-start sm:items-center rounded border border-slate-800 p-3 sm:p-0 sm:border-0">
               {/* Module Name Input */}
-              <div className="col-span-7 pr-4">
+              <div className="sm:col-span-7 sm:pr-4">
+                <label className="block sm:hidden text-xs font-bold text-slate-300 mb-2">Module Name</label>
                 <input
                   type="text"
                   value={formSet.module.name}
                   onChange={(e) => updateFormSet(formSet.id, 'name', e.target.value)}
                   placeholder="Module name (required)"
                   required
-                  className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
+                  className="w-full min-h-11 px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm"
                 />
               </div>
 
               {/* Credits Input */}
-              <div className="col-span-2 px-2">
+              <div className="sm:col-span-2 sm:px-2">
+                <label className="block sm:hidden text-xs font-bold text-slate-300 mb-2">Credits</label>
                 <input
                   type="number"
                   value={formSet.module.credits || ''}
@@ -323,16 +325,17 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
                   placeholder="0"
                   min="0"
                   max="10"
-                  className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
+                  className="w-full min-h-11 px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
                 />
               </div>
 
               {/* Grade Select */}
-              <div className="col-span-2 px-2">
+              <div className="sm:col-span-2 sm:px-2">
+                <label className="block sm:hidden text-xs font-bold text-slate-300 mb-2">Grade</label>
                 <select
                   value={formSet.module.grade}
                   onChange={(e) => updateFormSet(formSet.id, 'grade', e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
+                  className="w-full min-h-11 px-3 py-2 border border-slate-800 rounded bg-[#0A0E1A] text-white focus:outline-none focus:border-primary transition-colors duration-200 text-sm text-center"
                 >
                   <option value="" className="bg-[#0A0E1A]">Select Grade</option>
                   <option value="A+" className="bg-[#0A0E1A]">A+</option>
@@ -351,11 +354,11 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
               </div>
 
               {/* Remove Button */}
-              <div className="col-span-1 flex justify-center">
+              <div className="sm:col-span-1 flex justify-start sm:justify-center pt-1 sm:pt-0">
                 {formSets.length > 1 && (
                   <button
                     onClick={() => removeFormSet(formSet.id)}
-                    className="w-8 h-8 bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center justify-center font-bold"
+                    className="w-9 h-9 sm:w-8 sm:h-8 bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center justify-center font-bold"
                   >
                     <span className="text-lg">−</span>
                   </button>
