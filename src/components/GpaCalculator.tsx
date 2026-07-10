@@ -32,7 +32,6 @@ const GpaCalculator: React.FC<GpaCalculatorProps> = ({ activeView }) => {
   const [cumulativeCredits, setCumulativeCredits] = useState('');
   const [cumulativeGradePoints, setCumulativeGradePoints] = useState('');
   const [showTheoryFaq, setShowTheoryFaq] = useState(false);
-  const [showExampleFaq, setShowExampleFaq] = useState(false);
   const [showGradingSystem, setShowGradingSystem] = useState(false);
 
   // Create another module form
